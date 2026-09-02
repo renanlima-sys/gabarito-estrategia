@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Overlay | Estratégia Concursos</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #0f0a1e;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            color: #d1c4e9;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #a594c9;
+            font-size: 16px;
+        }
+
+        .card-control {
+            background: #1c1138;
+            border: 1px solid #36226b;
+            border-radius: 12px;
+            padding: 30px;
+            width: 100%;
+            max-width: 600px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #e0e0e0;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 14px;
+            border-radius: 8px;
+            border: 2px solid #36226b;
+            background-color: #0f0a1e;
+            color: #fff;
+            font-size: 18px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            border-color: #7c4dff;
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        button {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .btn-generate {
+            background-color: #7c4dff;
+            color: white;
+        }
+
+        .btn-generate:hover {
+            background-color: #651fff;
+        }
+
+        .btn-copy {
+            background-color: #00e676;
+            color: #000;
+            display: none;
+        }
+
+        .btn-copy:hover {
+            background-color: #00c853;
+        }
+
+        .output-box {
+            margin-top: 20px;
+            display: none;
+        }
+
+        .output-url {
+            width: 100%;
+            padding: 12px;
+            background: #2a1b54;
+            border: 1px dashed #7c4dff;
+            border-radius: 6px;
+            color: #00e676;
+            font-family: monospace;
+            font-size: 14px;
+            word-break: break-all;
+        }
+
+        /* Área de Preview */
+        .preview-container {
+            width: 100%;
+            max-width: 960px; /* Metade de 1920px para caber na tela mantendo proporção 16:9 */
+            height: 540px;   /* Metade de 1080px */
+            border: 2px solid #36226b;
+            border-radius: 12px;
+            overflow: hidden;
+            background-color: #000;
+            display: none;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        iframe {
+            width: 1920px;
+            height: 1080px;
+            border: none;
+            transform: scale(0.5); /* Esclalado para 50% */
+            transform-origin: 0 0;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            background-color: #00e676;
+            color: #000;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-weight: bold;
+            display: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Painel do Operador vMix</h1>
+        <p>Gerador de overlays de gabarito em tempo real</p>
+    </div>
+
+    <div class="card-control">
+        <div class="form-group">
+            <label for="event-id">ID do Evento (Célula E1 da Planilha):</label>
+            <input type="text" id="event-id" placeholder="Ex: 178150 ou ibge_01" autocomplete="off">
+        </div>
+
+        <div class="actions">
+            <button class="btn-generate" onclick="gerarLink()">Carregar & Pré-visualizar</button>
+            <button class="btn-copy" id="btn-copy" onclick="copiarLink()">Copiar Link do vMix</button>
+        </div>
+
+        <div class="output-box" id="output-box">
+            <label style="margin-top: 15px;">URL Gerada para a entrada Web Browser do vMix:</label>
+            <input type="text" class="output-url" id="generated-url" readonly>
+        </div>
+    </div>
+
+    <div class="preview-container" id="preview-container">
+        <iframe id="preview-iframe" src=""></iframe>
+    </div>
+
+    <div class="toast" id="toast">Link copiado com sucesso!</div>
+
+    <script>
+        // Pega a URL base dinamicamente (onde o projeto está hospedado no GitHub Pages)
+        const baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/')) + '/index.html';
+
+        function gerarLink() {
+            const id = document.getElementById('event-id').value.trim();
+
+            if (!id) {
+                alert('Por favor, digite o ID do evento!');
+                return;
+            }
+
+            const urlFinal = `${baseUrl}?evento=${encodeURIComponent(id)}`;
+
+            // Exibe os campos de saída e o botão de copiar
+            document.getElementById('generated-url').value = urlFinal;
+            document.getElementById('output-box').style.display = 'block';
+            document.getElementById('btn-copy').style.display = 'block';
+
+            // Carrega a prévia no iframe
+            const iframe = document.getElementById('preview-iframe');
+            iframe.src = urlFinal;
+            document.getElementById('preview-container').style.display = 'block';
+        }
+
+        function copiarLink() {
+            const urlInput = document.getElementById('generated-url');
+            urlInput.select();
+            navigator.clipboard.writeText(urlInput.value);
+
+            // Exibe notificação de confirmação
+            const toast = document.getElementById('toast');
+            toast.style.display = 'block';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 2500);
+        }
+
+        // Permite pressionar Enter para gerar o link
+        document.getElementById('event-id').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                gerarLink();
+            }
+        });
+    </script>
+</body>
+</html>
