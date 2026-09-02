@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Gabarito Estratégia</title>
+    <style>
+        body { 
+            margin: 0; 
+            width: 1920px; 
+            height: 1080px; 
+            background-color: transparent; 
+            overflow: hidden; 
+            font-family: 'Arial', sans-serif; 
+        }
+
+        #fundo-arte {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1920px;
+            height: 1080px;
+            background-size: 1920px 1080px;
+            background-repeat: no-repeat;
+            z-index: 1; 
+        }
+
+        /* CONTAINER RESTRITO E CENTRALIZADO DENTRO DA AREA BRANCA */
+        .grid-container { 
+            position: absolute;
+            top: 200px;    /* Distância em pixels em relação ao TOPO da tela. (Aumente para DESCER, diminua para SUBIR) */
+            left: 12px;    /* Distância em pixels em relação à ESQUERDA da tela. (Aumente para ir para a DIREITA) */
+            width: 610px;  /* LARGURA total da grade de questões. (Aumente para esticar para os lados) */
+            height: 630px; /* ALTURA total da grade de questões. (Aumente para esticar para baixo) */
+            z-index: 2; 
+            display: grid; 
+            grid-template-rows: repeat(15, 1fr);   /* Cria 15 linhas de tamanho igual */
+            grid-template-columns: repeat(4, 1fr); /* Cria 4 colunas de tamanho igual */
+            grid-auto-flow: column;                /* Ordena na vertical (1 a 15 na col 1, 16 a 30 na col 2...) */
+            row-gap: 2px; /* Espaço vazio entre as linhas na vertical */
+            column-gap: 2px; /* Espaço vazio entre as colunas na horizontal */
+            padding: 10px 8px; /* Margem interna de segurança das bordas */
+            box-sizing: border-box;
+            color: black; 
+        }
+
+        .questao-box { 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            font-size: 26px; 
+        }
+
+        .numero { 
+            width: 32px; /* Largura reservada para o número */
+            text-align: right; /* Alinha o número à direita para encostar na bolinha */
+            margin-right: 12px; /* Distância (em pixels) entre o número e a bolinha roxa */
+            font-weight: 800; /* Espessura da fonte (800 = negrito forte, 400 = normal) */
+        }
+        
+        .letra { 
+            width: 44px;    /* LARGURA da bolinha roxa (Ex: mude para 48px se quiser maior) */
+            height: 44px;   /* ALTURA da bolinha roxa (Mantenha igual à largura para ficar redonda) */
+            font-size: 26px; /* TAMANHO DA LETRA (A, B, C, D, E) dentro da bolinha */
+            font-weight: 800; /* Deixa a letra interna em negrito */
+            background-color: #4a2b82; /* Cor roxa da bolinha */
+            color: white; /* Cor da letra */
+            border-radius: 50%; /* Transforma o quadrado em círculo perfeito */
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            transition: all 0.3s ease;
+        }
+
+        .letra.vazia { background-color: #f0f0f0; color: transparent; }
+        
+        .aviso { color: black; font-size: 20px; grid-column: span 4; text-align: center; margin-top: 50px;}
+    </style>
+</head>
+<body>
+
+    <div id="fundo-arte"></div>
+
+    <div class="grid-container" id="grid-respostas">
+        <div class="aviso">Carregando dados da planilha...</div>
+    </div>
+
+    <script>
+        const API_URL = "https://script.google.com/macros/s/AKfycbzZCCQoeVY2cRJSIlcHZCMY0LPUaH-MFhcwWp4yLgWt5NNpNm6_aZpY11gHGN9z9hPfWA/exec";
+        
+        const params = new URLSearchParams(window.location.search);
+        const eventoID = params.get("evento");
+        
+        let gabaritoCompleto = [];
+        let paginaAtual = 0;
+        const limitePorPagina = 60; 
+
+        function obterLinkDiretoDrive(url) {
+            if (!url) return "";
+            let match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+            if (match && match[1]) {
+                return `https://drive.google.com/uc?export=view&id=${match[1]}`;
+            }
+            return url; 
+        }
+
+        async function atualizarDados() {
+            if (!eventoID) {
+                document.getElementById("grid-respostas").innerHTML = "<div class='aviso'>Erro: Nenhum ID informado no link. Ex: ?evento=178150</div>";
+                return;
+            }
+
+            try {
+                let resposta = await fetch(API_URL + "?evento=" + eventoID);
+                let dados = await resposta.json();
+
+                if (dados.erro) {
+                    document.getElementById("grid-respostas").innerHTML = `<div class='aviso'>${dados.erro}</div>`;
+                    return;
+                }
+
+                if (dados.configuracoes && dados.configuracoes.arte_fundo) {
+                    let linkImagem = obterLinkDiretoDrive(dados.configuracoes.arte_fundo);
+                    document.getElementById("fundo-arte").style.backgroundImage = `url('${linkImagem}')`;
+                }
+                
+                if (JSON.stringify(gabaritoCompleto) !== JSON.stringify(dados.gabarito)) {
+                    gabaritoCompleto = dados.gabarito;
+                    desenharTela();
+                }
+            } catch (erro) {
+                console.error("Erro na busca de dados:", erro);
+            }
+        }
+
+        function desenharTela() {
+            const grid = document.getElementById("grid-respostas");
+            grid.innerHTML = ""; 
+
+            let inicio = paginaAtual * limitePorPagina;
+            let fim = inicio + limitePorPagina;
+            let paginacao = gabaritoCompleto.slice(inicio, fim);
+
+            paginacao.forEach(q => {
+                let box = document.createElement("div");
+                box.className = "questao-box";
+                
+                let textoLetra = q.resposta ? q.resposta : "";
+                let classeVazia = q.resposta.toString().trim() === "" ? "vazia" : "";
+
+                box.innerHTML = `
+                    <div class="numero">${q.numero}</div>
+                    <div class="letra ${classeVazia}">${textoLetra}</div>
+                `;
+                grid.appendChild(box);
+            });
+        }
+
+        function rotacionarPaginas() {
+            if (gabaritoCompleto.length > limitePorPagina) {
+                paginaAtual++;
+                if ((paginaAtual * limitePorPagina) >= gabaritoCompleto.length) {
+                    paginaAtual = 0;
+                }
+                desenharTela();
+            }
+        }
+
+        atualizarDados();
+        setInterval(atualizarDados, 5000); 
+        setInterval(rotacionarPaginas, 12000); 
+    </script>
+</body>
+</html>
