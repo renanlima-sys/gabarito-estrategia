@@ -40,6 +40,9 @@
             padding: 10px 8px; 
             box-sizing: border-box;
             color: black; 
+            /* TRANSIÇÃO SUAVE EM FADE */
+            opacity: 1;
+            transition: opacity 0.6s ease-in-out;
         }
 
         .questao-box { 
@@ -93,15 +96,10 @@
         let paginaAtual = 0;
         const limitePorPagina = 60; 
 
-        // TRATAMENTO NATIVO DO LINK DO GOOGLE DRIVE
         function obterLinkDiretoDrive(url) {
             if (!url) return "";
-            
-            // Extrai o ID do arquivo de links normais ou de compartilhamento
             let match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
-            
             if (match && match[1]) {
-                // Converte para a CDN de alta performance do Googleusercontent sem bloqueios de CORS
                 return `https://lh3.googleusercontent.com/d/${match[1]}`;
             }
             return url; 
@@ -159,19 +157,30 @@
             });
         }
 
+        // ROTAÇÃO SUAVE COM TRANSIÇÃO EM FADE
         function rotacionarPaginas() {
             if (gabaritoCompleto.length > limitePorPagina) {
-                paginaAtual++;
-                if ((paginaAtual * limitePorPagina) >= gabaritoCompleto.length) {
-                    paginaAtual = 0;
-                }
-                desenharTela();
+                const grid = document.getElementById("grid-respostas");
+                
+                // Transição para sumir
+                grid.style.opacity = "0";
+
+                setTimeout(() => {
+                    paginaAtual++;
+                    if ((paginaAtual * limitePorPagina) >= gabaritoCompleto.length) {
+                        paginaAtual = 0;
+                    }
+                    desenharTela();
+                    
+                    // Transição para reaparecer
+                    grid.style.opacity = "1";
+                }, 600);
             }
         }
 
         atualizarDados();
         setInterval(atualizarDados, 5000); 
-        setInterval(rotacionarPaginas, 120000); // 120 segundos para alterar página
+        setInterval(rotacionarPaginas, 120000); 
     </script>
 </body>
 </html>
