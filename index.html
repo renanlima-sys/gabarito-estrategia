@@ -96,12 +96,11 @@
         let paginaAtual = 0;
         const limitePorPagina = 60; 
 
-        // CONVERSÃO SEGURA DO LINK DO GOOGLE DRIVE
         function obterLinkDiretoDrive(url) {
             if (!url) return "";
-            var match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
-            if (match && match[1]) {
-                return 'https://lh3.googleusercontent.com/d/' + match[1];
+            var idMatch = url.match(/[\w-]{25,}/);
+            if (idMatch) {
+                return "https://lh3.googleusercontent.com/d/" + idMatch[0];
             }
             return url; 
         }
@@ -131,7 +130,7 @@
                     desenharTela();
                 }
             } catch (erro) {
-                console.error("Erro ao buscar dados:", erro);
+                console.error("Erro na busca de dados:", erro);
             }
         }
 
@@ -172,13 +171,3 @@
                     desenharTela();
                     
                     grid.style.opacity = "1";
-                }, 1200); 
-            }
-        }
-
-        atualizarDados();
-        setInterval(atualizarDados, 5000); 
-        setInterval(rotacionarPaginas, 120000); 
-    </script>
-</body>
-</html>
