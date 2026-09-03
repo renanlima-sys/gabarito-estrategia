@@ -12,8 +12,14 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
+        /* FUNDO DEGRADÊ ESTILO MESH (INSPIRADO NA SUA IMAGEM) */
         body {
-            background-color: #0f0a1e;
+            background-color: #03020c;
+            background-image: 
+                radial-gradient(circle at 15% 85%, #6a0ba8 0%, transparent 55%),
+                radial-gradient(circle at 45% 35%, #0d1b7a 0%, transparent 60%),
+                radial-gradient(circle at 85% 15%, #05051a 0%, transparent 50%);
+            background-attachment: fixed;
             color: #ffffff;
             min-height: 100vh;
             display: flex;
@@ -28,24 +34,27 @@
         }
 
         .header h1 {
-            font-size: 28px;
-            color: #d1c4e9;
+            font-size: 32px;
+            color: #ffffff;
             margin-bottom: 8px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
         }
 
         .header p {
-            color: #a594c9;
+            color: #b3a5d0;
             font-size: 16px;
         }
 
+        /* CARD SEMI-TRANSPARENTE (GLASSMORPHISM) */
         .card-control {
-            background: #1c1138;
-            border: 1px solid #36226b;
-            border-radius: 12px;
+            background: rgba(18, 10, 36, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(124, 77, 255, 0.25);
+            border-radius: 16px;
             padding: 30px;
             width: 100%;
             max-width: 600px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
             margin-bottom: 30px;
         }
 
@@ -64,8 +73,8 @@
             width: 100%;
             padding: 14px;
             border-radius: 8px;
-            border: 2px solid #36226b;
-            background-color: #0f0a1e;
+            border: 2px solid rgba(124, 77, 255, 0.4);
+            background-color: rgba(5, 3, 15, 0.8);
             color: #fff;
             font-size: 18px;
             outline: none;
@@ -73,7 +82,7 @@
         }
 
         input[type="text"]:focus {
-            border-color: #7c4dff;
+            border-color: #9d6bff;
         }
 
         .actions {
@@ -99,6 +108,7 @@
         .btn-generate {
             background-color: #7c4dff;
             color: white;
+            box-shadow: 0 4px 15px rgba(124, 77, 255, 0.4);
         }
 
         .btn-generate:hover {
@@ -109,6 +119,7 @@
             background-color: #00e676;
             color: #000;
             display: none;
+            box-shadow: 0 4px 15px rgba(0, 230, 118, 0.3);
         }
 
         .btn-copy:hover {
@@ -123,7 +134,7 @@
         .output-url {
             width: 100%;
             padding: 12px;
-            background: #2a1b54;
+            background: rgba(15, 8, 35, 0.9);
             border: 1px dashed #7c4dff;
             border-radius: 6px;
             color: #00e676;
@@ -132,25 +143,25 @@
             word-break: break-all;
         }
 
-        /* Área de Preview */
+        /* ÁREA DE PREVIEW */
         .preview-container {
             width: 100%;
             max-width: 960px; /* Metade de 1920px para caber na tela mantendo proporção 16:9 */
             height: 540px;   /* Metade de 1080px */
-            border: 2px solid #36226b;
-            border-radius: 12px;
+            border: 1px solid rgba(124, 77, 255, 0.3);
+            border-radius: 16px;
             overflow: hidden;
             background-color: #000;
             display: none;
             position: relative;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
         }
 
         iframe {
             width: 1920px;
             height: 1080px;
             border: none;
-            transform: scale(0.5); /* Esclalado para 50% */
+            transform: scale(0.5); /* Escalado para 50% */
             transform-origin: 0 0;
         }
 
