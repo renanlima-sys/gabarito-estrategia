@@ -5,14 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gerador de Overlay | Estratégia Concursos</title>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
 
-        /* FUNDO DEGRADÊ ANIMADO EM TONS DE AZUL E PRETO */
         body {
             background-color: #020617;
             background-image: 
@@ -36,7 +30,6 @@
             100% { background-position: 0% 30%; }
         }
 
-        /* CONTAINER PRINCIPAL LADO A LADO (FLEXBOX) */
         .main-container {
             display: flex;
             flex-direction: row;
@@ -48,7 +41,6 @@
             margin-bottom: 20px;
         }
 
-        /* PAINEL DE CONTROLE (LADO ESQUERDO) */
         .card-control {
             background: rgba(255, 255, 255, 0.04);
             backdrop-filter: blur(20px);
@@ -58,42 +50,15 @@
             padding: 35px 30px;
             width: 450px;
             flex-shrink: 0;
-            box-shadow: 
-                0 20px 50px rgba(0, 0, 0, 0.6),
-                inset 0 1px 1px rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
             text-align: center;
         }
 
-        .header {
-            margin-bottom: 25px;
-        }
+        .header h1 { font-size: 28px; font-weight: 700; color: #ffffff; margin-bottom: 6px; }
+        .header p { color: rgba(224, 242, 254, 0.8); font-size: 14px; margin-bottom: 20px; }
 
-        .header h1 {
-            font-size: 28px;
-            font-weight: 700;
-            color: #ffffff;
-            margin-bottom: 6px;
-            letter-spacing: -0.5px;
-            text-shadow: 0 4px 12px rgba(0,0,0,0.5);
-        }
-
-        .header p {
-            color: rgba(224, 242, 254, 0.8);
-            font-size: 14px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-            text-align: left;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 13px;
-            font-weight: 600;
-            color: rgba(240, 249, 255, 0.9);
-        }
+        .form-group { margin-bottom: 20px; text-align: left; }
+        label { display: block; margin-bottom: 8px; font-size: 13px; font-weight: 600; color: rgba(240, 249, 255, 0.9); }
 
         input[type="text"] {
             width: 100%;
@@ -104,24 +69,54 @@
             color: #fff;
             font-size: 15px;
             outline: none;
-            transition: all 0.3s ease;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
         }
 
-        input[type="text"]::placeholder {
-            color: rgba(255, 255, 255, 0.35);
+        /* PALETA DE CORES */
+        .color-picker-container {
+            display: none;
+            margin-top: 15px;
+            text-align: left;
+            background: rgba(2, 6, 23, 0.4);
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid rgba(56, 189, 248, 0.15);
         }
 
-        input[type="text"]:focus {
-            border-color: rgba(56, 189, 248, 0.8);
-            box-shadow: 0 0 15px rgba(56, 189, 248, 0.3), inset 0 2px 4px rgba(0, 0, 0, 0.5);
-        }
-
-        .actions {
+        .color-presets {
             display: flex;
-            flex-direction: column;
-            gap: 12px;
+            gap: 10px;
+            margin-top: 8px;
+            margin-bottom: 12px;
         }
+
+        .color-dot {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: transform 0.2s;
+        }
+
+        .color-dot:hover { transform: scale(1.1); }
+        .color-dot.active { border-color: #ffffff; }
+
+        .custom-color-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        input[type="color"] {
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            cursor: pointer;
+            background: none;
+        }
+
+        .actions { display: flex; flex-direction: column; gap: 12px; margin-top: 15px; }
 
         button {
             width: 100%;
@@ -131,42 +126,12 @@
             font-size: 15px;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s ease;
         }
 
-        button:active {
-            transform: scale(0.98);
-        }
+        .btn-generate { background: linear-gradient(135deg, #0284c7 0%, #1d4ed8 100%); color: white; }
+        .btn-copy { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; display: none; }
 
-        .btn-generate {
-            background: linear-gradient(135deg, #0284c7 0%, #1d4ed8 100%);
-            color: white;
-            box-shadow: 0 8px 20px rgba(2, 132, 199, 0.35);
-        }
-
-        .btn-generate:hover {
-            box-shadow: 0 10px 25px rgba(2, 132, 199, 0.55);
-            filter: brightness(1.1);
-        }
-
-        .btn-copy {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: #ffffff;
-            display: none;
-            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.35);
-        }
-
-        .btn-copy:hover {
-            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.55);
-            filter: brightness(1.1);
-        }
-
-        .output-box {
-            margin-top: 18px;
-            display: none;
-            text-align: left;
-        }
-
+        .output-box { margin-top: 18px; display: none; text-align: left; }
         .output-url {
             width: 100%;
             padding: 12px;
@@ -179,7 +144,6 @@
             word-break: break-all;
         }
 
-        /* ÁREA DE PREVIEW (LADO DIREITO) */
         .preview-container {
             width: 800px;
             height: 450px;
@@ -188,9 +152,6 @@
             overflow: hidden;
             background-color: #000;
             display: none;
-            position: relative;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(10px);
             flex-shrink: 0;
         }
 
@@ -198,27 +159,11 @@
             width: 1920px;
             height: 1080px;
             border: none;
-            transform: scale(0.4166); /* Escala para caber em 800x450 */
+            transform: scale(0.4166);
             transform-origin: 0 0;
         }
 
-        /* RODAPÉ COM LOGO */
-        .footer-logo {
-            margin-top: 10px;
-            text-align: center;
-        }
-
-        .footer-logo img {
-            max-width: 160px;
-            height: auto;
-            opacity: 0.85;
-            transition: opacity 0.3s ease;
-        }
-
-        .footer-logo img:hover {
-            opacity: 1;
-        }
-
+        .footer-logo img { max-width: 160px; height: auto; opacity: 0.85; }
         .toast {
             position: fixed;
             bottom: 30px;
@@ -228,39 +173,37 @@
             border-radius: 30px;
             font-weight: bold;
             display: none;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-        }
-
-        /* RESPONSIVIDADE PARA TELAS MENORES */
-        @media (max-width: 1300px) {
-            .main-container {
-                flex-direction: column;
-                align-items: center;
-            }
-            .card-control {
-                width: 100%;
-                max-width: 550px;
-            }
-            .preview-container {
-                width: 100%;
-                max-width: 800px;
-            }
         }
     </style>
 </head>
 <body>
 
     <div class="main-container">
-        <!-- LADO ESQUERDO: CONTROLE -->
         <div class="card-control">
             <div class="header">
                 <h1>Gabaritos Estratégia</h1>
-                <p>Gerador de overlays de gabarito em tempo real</p>
+                <p>Gerador de overlays em tempo real</p>
             </div>
 
             <div class="form-group">
                 <label for="event-id">ID do Agendamento:</label>
                 <input type="text" id="event-id" placeholder="INSERIR O ID DO INTRA AQUI!" autocomplete="off">
+            </div>
+
+            <div class="color-picker-container" id="color-section">
+                <label>Cor dos Retângulos do Gabarito:</label>
+                <div class="color-presets">
+                    <div class="color-dot active" style="background-color: #4a2b82;" onclick="selecionarCor('#4a2b82')"></div>
+                    <div class="color-dot" style="background-color: #1d4ed8;" onclick="selecionarCor('#1d4ed8')"></div>
+                    <div class="color-dot" style="background-color: #0284c7;" onclick="selecionarCor('#0284c7')"></div>
+                    <div class="color-dot" style="background-color: #059669;" onclick="selecionarCor('#059669')"></div>
+                    <div class="color-dot" style="background-color: #dc2626;" onclick="selecionarCor('#dc2626')"></div>
+                    <div class="color-dot" style="background-color: #0f172a;" onclick="selecionarCor('#0f172a')"></div>
+                </div>
+                <div class="custom-color-row">
+                    <label style="margin: 0; font-size: 12px;">Cor Personalizada:</label>
+                    <input type="color" id="custom-color" value="#4a2b82" onchange="selecionarCor(this.value)">
+                </div>
             </div>
 
             <div class="actions">
@@ -274,13 +217,11 @@
             </div>
         </div>
 
-        <!-- LADO DIREITO: PREVIEW -->
         <div class="preview-container" id="preview-container">
             <iframe id="preview-iframe" src=""></iframe>
         </div>
     </div>
 
-    <!-- LOGO DO ESTRATÉGIA NO RODAPÉ -->
     <div class="footer-logo">
         <img src="https://lh3.googleusercontent.com/d/14liJU9Uk5wsCe1spKmSYV-DytETRkvGS" alt="Estratégia Concursos">
     </div>
@@ -289,6 +230,7 @@
 
     <script>
         const baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/')) + '/index.html';
+        let corSelecionada = "#4a2b82";
 
         function gerarLink() {
             const id = document.getElementById('event-id').value.trim();
@@ -298,34 +240,23 @@
                 return;
             }
 
-            const urlFinal = `${baseUrl}?evento=${encodeURIComponent(id)}`;
+            atualizarUrlFinal();
 
-            document.getElementById('generated-url').value = urlFinal;
+            document.getElementById('color-section').style.display = 'block';
             document.getElementById('output-box').style.display = 'block';
             document.getElementById('btn-copy').style.display = 'block';
-
-            const iframe = document.getElementById('preview-iframe');
-            iframe.src = urlFinal;
             document.getElementById('preview-container').style.display = 'block';
         }
 
-        function copiarLink() {
-            const urlInput = document.getElementById('generated-url');
-            urlInput.select();
-            navigator.clipboard.writeText(urlInput.value);
-
-            const toast = document.getElementById('toast');
-            toast.style.display = 'block';
-            setTimeout(() => {
-                toast.style.display = 'none';
-            }, 2500);
+        function selecionarCor(hex) {
+            corSelecionada = hex;
+            document.getElementById('custom-color').value = hex;
+            atualizarUrlFinal();
         }
 
-        document.getElementById('event-id').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                gerarLink();
-            }
-        });
-    </script>
-</body>
-</html>
+        function atualizarUrlFinal() {
+            const id = document.getElementById('event-id').value.trim();
+            const corLimpa = encodeURIComponent(corSelecionada);
+            const urlFinal = `${baseUrl}?evento=${encodeURIComponent(id)}&cor=${corLimpa}`;
+
+            document.getElementById('generated
