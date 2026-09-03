@@ -26,7 +26,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center; /* CENTRALIZA VERTICALMENTE */
+            justify-content: center;
             padding: 40px 20px;
         }
 
@@ -38,17 +38,17 @@
 
         /* CARD ESTILO GLASSMORPHISM AVANÇADO */
         .card-control {
-            background: rgba(255, 255, 255, 0.05); /* Transparência de vidro */
-            backdrop-filter: blur(20px); /* Desfoque do fundo */
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.18); /* Borda fina iluminada */
+            border: 1px solid rgba(255, 255, 255, 0.18);
             border-radius: 24px;
             padding: 40px 35px;
             width: 100%;
             max-width: 550px;
             box-shadow: 
                 0 20px 50px rgba(0, 0, 0, 0.5),
-                inset 0 1px 1px rgba(255, 255, 255, 0.3); /* Reflexo interno de luz */
+                inset 0 1px 1px rgba(255, 255, 255, 0.3);
             text-align: center;
             margin-bottom: 30px;
         }
@@ -181,14 +181,32 @@
             position: relative;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(10px);
+            margin-bottom: 30px;
         }
 
         iframe {
             width: 1920px;
             height: 1080px;
             border: none;
-            transform: scale(0.4166); /* Ajuste de escala proporcional para 800px */
+            transform: scale(0.4166);
             transform-origin: 0 0;
+        }
+
+        /* ESTILO DA LOGO NO RODAPÉ */
+        .footer-logo {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .footer-logo img {
+            max-width: 180px; /* Largura da imagem */
+            height: auto;
+            opacity: 0.8;    /* Leve transparência para harmonizar com o vidro */
+            transition: opacity 0.3s ease;
+        }
+
+        .footer-logo img:hover {
+            opacity: 1; /* Ilumina ao passar o mouse */
         }
 
         .toast {
@@ -230,6 +248,11 @@
 
     <div class="preview-container" id="preview-container">
         <iframe id="preview-iframe" src=""></iframe>
+    </div>
+
+    <!-- LOGO DO ESTRATÉGIA NO RODAPÉ -->
+    <div class="footer-logo">
+        <img src="https://lh3.googleusercontent.com/d/12a8e45a0b_EXEMPLO" id="logo-img" alt="Estratégia Concursos" onerror="this.style.display='none'">
     </div>
 
     <div class="toast" id="toast">Link copiado com sucesso!</div>
