@@ -111,28 +111,33 @@
                 return;
             }
 
-            fetch(API_URL + "?evento=" + eventoID)
-                .then(function(res) { return res.json(); })
-                .then(function(dados) {
-                    if (dados.erro) {
-                        document.getElementById("status-msg").innerText = dados.erro;
-                        return;
-                    }
+            // DELAY ALEATÓRIO (0 a 2.5s) PARA DIVERSIFICAR O TRÁFEGO DOS 10 VMEXES
+            var delayAleatorio = Math.floor(Math.random() * 2500);
 
-                    if (dados.configuracoes && dados.configuracoes.arte_fundo) {
-                        var linkImg = converterLinkDrive(dados.configuracoes.arte_fundo);
-                        document.getElementById("fundo-arte").style.backgroundImage = "url('" + linkImg + "')";
-                    }
+            setTimeout(function() {
+                fetch(API_URL + "?evento=" + eventoID)
+                    .then(function(res) { return res.json(); })
+                    .then(function(dados) {
+                        if (dados.erro) {
+                            document.getElementById("status-msg").innerText = dados.erro;
+                            return;
+                        }
 
-                    if (dados.gabarito && Array.isArray(dados.gabarito)) {
-                        gabaritoCompleto = dados.gabarito;
-                        desenharTela();
-                    }
-                })
-                .catch(function(err) {
-                    console.error(err);
-                    document.getElementById("status-msg").innerText = "Erro de Conexão com o Google Apps Script.";
-                });
+                        if (dados.configuracoes && dados.configuracoes.arte_fundo) {
+                            var linkImg = converterLinkDrive(dados.configuracoes.arte_fundo);
+                            document.getElementById("fundo-arte").style.backgroundImage = "url('" + linkImg + "')";
+                        }
+
+                        if (dados.gabarito && Array.isArray(dados.gabarito)) {
+                            gabaritoCompleto = dados.gabarito;
+                            desenharTela();
+                        }
+                    })
+                    .catch(function(err) {
+                        console.error(err);
+                        // Mantém os dados antigos na tela em caso de instabilidade pontual da rede
+                    });
+            }, delayAleatorio);
         }
 
         function desenharTela() {
@@ -175,7 +180,8 @@
         }
 
         carregarDados();
-        setInterval(carregarDados, 5000); 
+        // OTIMIZAÇÃO: Busca a cada 10 segundos (10000ms) para economizar 50% de banda do Google
+        setInterval(carregarDados, 10000); 
         setInterval(rotacionarPaginas, 120000); 
     </script>
 </body>
