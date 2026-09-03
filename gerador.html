@@ -12,13 +12,13 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        /* FUNDO DEGRADÊ ANIMADO */
+        /* FUNDO DEGRADÊ ANIMADO - APENAS TONS DE AZUL PARA PRETO */
         body {
-            background-color: #03020c;
+            background-color: #020617;
             background-image: 
-                radial-gradient(circle at 20% 80%, #7c12b3 0%, transparent 50%),
-                radial-gradient(circle at 50% 20%, #0d2bb5 0%, transparent 55%),
-                radial-gradient(circle at 80% 80%, #b83280 0%, transparent 45%);
+                radial-gradient(circle at 20% 80%, #0369a1 0%, transparent 50%),
+                radial-gradient(circle at 50% 20%, #1d4ed8 0%, transparent 55%),
+                radial-gradient(circle at 80% 80%, #0f172a 0%, transparent 50%);
             background-size: 160% 160%;
             animation: moverDegrade 12s ease infinite alternate;
             color: #ffffff;
@@ -38,19 +38,19 @@
 
         /* CARD ESTILO GLASSMORPHISM AVANÇADO */
         .card-control {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.04);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.18);
+            border: 1px solid rgba(56, 189, 248, 0.2);
             border-radius: 24px;
             padding: 40px 35px;
             width: 100%;
             max-width: 550px;
             box-shadow: 
-                0 20px 50px rgba(0, 0, 0, 0.5),
-                inset 0 1px 1px rgba(255, 255, 255, 0.3);
+                0 20px 50px rgba(0, 0, 0, 0.6),
+                inset 0 1px 1px rgba(255, 255, 255, 0.2);
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
 
         .header {
@@ -63,11 +63,11 @@
             color: #ffffff;
             margin-bottom: 8px;
             letter-spacing: -0.5px;
-            text-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            text-shadow: 0 4px 12px rgba(0,0,0,0.5);
         }
 
         .header p {
-            color: rgba(255, 255, 255, 0.7);
+            color: rgba(224, 242, 254, 0.8);
             font-size: 15px;
         }
 
@@ -81,20 +81,20 @@
             margin-bottom: 10px;
             font-size: 14px;
             font-weight: 600;
-            color: rgba(255, 255, 255, 0.9);
+            color: rgba(240, 249, 255, 0.9);
         }
 
         input[type="text"] {
             width: 100%;
             padding: 16px;
             border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            background-color: rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(56, 189, 248, 0.25);
+            background-color: rgba(2, 6, 23, 0.6);
             color: #fff;
             font-size: 16px;
             outline: none;
             transition: all 0.3s ease;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
         }
 
         input[type="text"]::placeholder {
@@ -102,8 +102,8 @@
         }
 
         input[type="text"]:focus {
-            border-color: rgba(168, 85, 247, 0.8);
-            box-shadow: 0 0 15px rgba(168, 85, 247, 0.4), inset 0 2px 4px rgba(0, 0, 0, 0.4);
+            border-color: rgba(56, 189, 248, 0.8);
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.3), inset 0 2px 4px rgba(0, 0, 0, 0.5);
         }
 
         .actions {
@@ -115,7 +115,7 @@
         button {
             width: 100%;
             padding: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 12px;
             font-size: 16px;
             font-weight: 700;
@@ -128,13 +128,13 @@
         }
 
         .btn-generate {
-            background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+            background: linear-gradient(135deg, #0284c7 0%, #1d4ed8 100%);
             color: white;
-            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.35);
+            box-shadow: 0 8px 20px rgba(2, 132, 199, 0.35);
         }
 
         .btn-generate:hover {
-            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.55);
+            box-shadow: 0 10px 25px rgba(2, 132, 199, 0.55);
             filter: brightness(1.1);
         }
 
@@ -159,8 +159,8 @@
         .output-url {
             width: 100%;
             padding: 14px;
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px dashed rgba(168, 85, 247, 0.5);
+            background: rgba(2, 6, 23, 0.8);
+            border: 1px dashed rgba(56, 189, 248, 0.5);
             border-radius: 8px;
             color: #34d399;
             font-family: monospace;
@@ -173,15 +173,15 @@
             width: 100%;
             max-width: 800px;
             height: 450px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(56, 189, 248, 0.3);
             border-radius: 20px;
             overflow: hidden;
             background-color: #000;
             display: none;
             position: relative;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(10px);
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
 
         iframe {
@@ -194,19 +194,19 @@
 
         /* ESTILO DA LOGO NO RODAPÉ */
         .footer-logo {
-            margin-top: 20px;
+            margin-top: 15px;
             text-align: center;
         }
 
         .footer-logo img {
-            max-width: 180px; /* Largura da imagem */
+            max-width: 190px;
             height: auto;
-            opacity: 0.8;    /* Leve transparência para harmonizar com o vidro */
+            opacity: 0.85;
             transition: opacity 0.3s ease;
         }
 
         .footer-logo img:hover {
-            opacity: 1; /* Ilumina ao passar o mouse */
+            opacity: 1;
         }
 
         .toast {
@@ -250,9 +250,9 @@
         <iframe id="preview-iframe" src=""></iframe>
     </div>
 
-    <!-- LOGO DO ESTRATÉGIA NO RODAPÉ -->
+    <!-- LOGO DO ESTRATÉGIA COM O SEU LINK DO GOOGLE DRIVE -->
     <div class="footer-logo">
-        <img src="https://drive.google.com/file/d/1d-KJ4u53b_fuyskiJC_la-QNglI9a3_N/view?usp=sharing" id="logo-img" alt="Estratégia Concursos" onerror="this.style.display='none'">
+        <img src="https://lh3.googleusercontent.com/d/14liJU9Uk5wsCe1spKmSYV-DytETRkvGS" alt="Estratégia Concursos">
     </div>
 
     <div class="toast" id="toast">Link copiado com sucesso!</div>
