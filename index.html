@@ -89,7 +89,9 @@
         
         const params = new URLSearchParams(window.location.search);
         const eventoID = params.get("evento");
+        const corParam = params.get("cor");
         
+        let corRetangulo = corParam ? decodeURIComponent(corParam) : "#4a2b82";
         let gabaritoCompleto = [];
         let paginaAtual = 0;
         const limitePorPagina = 60; 
@@ -100,13 +102,12 @@
             return match ? 'https://lh3.googleusercontent.com/d/' + match[0] : url;
         }
 
-        function carregarDadosJSONP() {
+        function carregarDados() {
             if (!eventoID) {
                 document.getElementById("status-msg").innerText = "Erro: Nenhum ID informado no link (?evento=ID)";
                 return;
             }
 
-            // Requisição com tratamento de erro
             fetch(API_URL + "?evento=" + eventoID)
                 .then(function(res) { return res.json(); })
                 .then(function(dados) {
@@ -148,7 +149,7 @@
 
                 box.innerHTML = 
                     '<div class="numero">' + q.numero + '</div>' +
-                    '<div class="letra ' + classeVazia + '">' + val + '</div>';
+                    '<div class="letra ' + classeVazia + '" style="background-color: ' + corRetangulo + ';">' + val + '</div>';
                 
                 grid.appendChild(box);
             });
@@ -170,8 +171,8 @@
             }
         }
 
-        carregarDadosJSONP();
-        setInterval(carregarDadosJSONP, 5000); 
+        carregarDados();
+        setInterval(carregarDados, 5000); 
         setInterval(rotacionarPaginas, 120000); 
     </script>
 </body>
