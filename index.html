@@ -24,11 +24,12 @@
             z-index: 1; 
         }
 
+        /* CONTAINER AMPLIADO (660px) PARA DISTRIBUIR PERFEITAMENTE AS 4 COLUNAS */
         .grid-container { 
             position: absolute;
             top: 200px; 
             left: 12px; 
-            width: 610px; 
+            width: 660px; /* Largura ajustada para dar respiro */
             height: 630px; 
             z-index: 2; 
             display: grid; 
@@ -36,7 +37,7 @@
             grid-template-columns: repeat(4, 1fr); 
             grid-auto-flow: column; 
             row-gap: 2px; 
-            column-gap: 2px; 
+            column-gap: 8px; /* Espaçamento ideal entre colunas */
             padding: 10px 8px; 
             box-sizing: border-box;
             color: black; 
@@ -47,22 +48,24 @@
         .questao-box { 
             display: flex; 
             align-items: center; 
-            justify-content: center;
+            justify-content: flex-start; /* Alinhamento uniforme */
             font-size: 26px; 
         }
 
+        /* NÚMERO VOLTOU AO TAMANHO ORIGINAL (26px) */
         .numero { 
-            width: 32px; 
+            width: 36px; 
             text-align: right; 
-            margin-right: 8px; 
+            margin-right: 10px; 
             font-weight: 800; 
+            font-size: 26px;
         } 
         
-        /* RETÂNGULO MAIS LARGO (54px) COM BORDAS ARREDONDADAS */
+        /* RETÂNGULO MAIOR E COM FONTE RESTAURADA (26px) */
         .letra { 
-            width: 54px; /* Aumentado de 46px para 54px */
-            height: 36px; 
-            font-size: 24px; 
+            width: 58px; 
+            height: 38px; 
+            font-size: 26px; /* Fonte ampliada */
             font-weight: 800; 
             background-color: #4a2b82; 
             color: #ffffff; 
