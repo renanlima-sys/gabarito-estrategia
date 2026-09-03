@@ -173,6 +173,54 @@
             display: none;
         }
     </style>
+    <script>
+        var corSelecionada = "#4a2b82";
+
+        function gerarLink() {
+            var input = document.getElementById('event-id');
+            var id = input ? input.value.trim() : '';
+
+            if (!id) {
+                alert('Por favor, digite o ID do evento!');
+                return;
+            }
+
+            atualizarUrlFinal();
+
+            document.getElementById('color-section').style.display = 'block';
+            document.getElementById('output-box').style.display = 'block';
+            document.getElementById('btn-copy').style.display = 'block';
+            document.getElementById('preview-container').style.display = 'block';
+        }
+
+        function selecionarCor(hex) {
+            corSelecionada = hex;
+            document.getElementById('custom-color').value = hex;
+            atualizarUrlFinal();
+        }
+
+        function atualizarUrlFinal() {
+            var input = document.getElementById('event-id');
+            var id = input ? input.value.trim() : '';
+            var baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/')) + '/index.html';
+            var urlFinal = baseUrl + '?evento=' + encodeURIComponent(id) + '&cor=' + encodeURIComponent(corSelecionada);
+
+            document.getElementById('generated-url').value = urlFinal;
+
+            var iframe = document.getElementById('preview-iframe');
+            iframe.src = urlFinal + '&v=' + new Date().getTime();
+        }
+
+        function copiarLink() {
+            var urlInput = document.getElementById('generated-url');
+            urlInput.select();
+            navigator.clipboard.writeText(urlInput.value);
+
+            var toast = document.getElementById('toast');
+            toast.style.display = 'block';
+            setTimeout(function() { toast.style.display = 'none'; }, 2500);
+        }
+    </script>
 </head>
 <body>
 
@@ -221,59 +269,12 @@
     </div>
 
     <div class="footer-logo">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/2/23/Logo_Estrat%C3%A9gia_Concursos.png" alt="Estratégia Concursos">
+        <img src="https://lh3.googleusercontent.com/d/14liJU9Uk5wsCe1spKmSYV-DytETRkvGS" alt="Estratégia Concursos">
     </div>
 
     <div class="toast" id="toast">Link copiado com sucesso!</div>
 
     <script>
-        var corSelecionada = "#4a2b82";
-
-        function gerarLink() {
-            var input = document.getElementById('event-id');
-            var id = input ? input.value.trim() : '';
-
-            if (!id) {
-                alert('Por favor, digite o ID do evento!');
-                return;
-            }
-
-            atualizarUrlFinal();
-
-            document.getElementById('color-section').style.display = 'block';
-            document.getElementById('output-box').style.display = 'block';
-            document.getElementById('btn-copy').style.display = 'block';
-            document.getElementById('preview-container').style.display = 'block';
-        }
-
-        function selecionarCor(hex) {
-            corSelecionada = hex;
-            document.getElementById('custom-color').value = hex;
-            atualizarUrlFinal();
-        }
-
-        function atualizarUrlFinal() {
-            var input = document.getElementById('event-id');
-            var id = input ? input.value.trim() : '';
-            var baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/')) + '/index.html';
-            var urlFinal = baseUrl + '?evento=' + encodeURIComponent(id) + '&cor=' + encodeURIComponent(corSelecionada);
-
-            document.getElementById('generated-url').value = urlFinal;
-
-            var iframe = document.getElementById('preview-iframe');
-            iframe.src = urlFinal + '&v=' + new Date().getTime();
-        }
-
-        function copiarLink() {
-            var urlInput = document.getElementById('generated-url');
-            urlInput.select();
-            navigator.clipboard.writeText(urlInput.value);
-
-            var toast = document.getElementById('toast');
-            toast.style.display = 'block';
-            setTimeout(function() { toast.style.display = 'none'; }, 2500);
-        }
-
         document.getElementById('event-id').addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
                 gerarLink();
