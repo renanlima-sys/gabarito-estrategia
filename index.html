@@ -24,19 +24,18 @@
             z-index: 1; 
         }
 
-        /* AJUSTE FINO DE POSICIONAMENTO E ALTURA PARA O CONTAINER BRANCO */
         .grid-container { 
             position: absolute;
-            top: 208px; /* Posição inicial corrigida */
+            top: 208px; 
             left: 12px; 
             width: 660px; 
-            height: 690px; /* Altura ideal reduzida para não vazar embaixo */
+            height: 690px; 
             z-index: 2; 
             display: grid; 
             grid-template-rows: repeat(15, 1fr); 
             grid-template-columns: repeat(4, 1fr); 
             grid-auto-flow: column; 
-            row-gap: 3px; /* Espaçamento vertical ajustado */
+            row-gap: 3px; 
             column-gap: 8px; 
             padding: 8px; 
             box-sizing: border-box;
@@ -65,13 +64,14 @@
             height: 39px; 
             font-size: 25px; 
             font-weight: 800; 
-            background-color: #4a2b82; 
+            background-color: #4a2b82; /* Cor padrão inicial */
             color: #ffffff; 
             border-radius: 8px; 
             display: flex; 
             align-items: center; 
             justify-content: center; 
             box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+            transition: background-color 0.5s ease, color 0.5s ease;
         }
 
         .letra.vazia { background-color: #f0f0f0 !important; color: transparent !important; box-shadow: none; }
@@ -97,6 +97,10 @@
         let paginaAtual = 0;
         const limitePorPagina = 60; 
 
+        let corRetanguloDetectada = "#4a2b82";
+        let corTextoDetectada = "#ffffff";
+        let arteCarregadaURL = "";
+
         function obterLinkDiretoDrive(url) {
             if (!url) return "";
             let match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
@@ -106,79 +110,36 @@
             return url; 
         }
 
-        async function atualizarDados() {
-            if (!eventoID) {
-                document.getElementById("grid-respostas").innerHTML = "<div class='aviso'>Erro: Nenhum ID informado no link. Ex: ?evento=178150</div>";
-                return;
-            }
+        // EXTRAÇÃO DE COR COM INTELIGÊNCIA DE CONTRASTE CONTRA O FUNDO BRANCO
+        function extrairEValidarCor(urlImagem) {
+            if (arteCarregadaURL === urlImagem) return;
+            arteCarregadaURL = urlImagem;
 
-            try {
-                let resposta = await fetch(API_URL + "?evento=" + eventoID);
-                let dados = await resposta.json();
+            const img = new Image();
+            img.crossOrigin = "Anonymous"; 
+            img.src = urlImagem;
 
-                if (dados.erro) {
-                    document.getElementById("grid-respostas").innerHTML = `<div class='aviso'>${dados.erro}</div>`;
-                    return;
+            img.onload = function() {
+                const canvas = document.createElement("canvas");
+                const ctx = canvas.getContext("2d");
+                canvas.width = img.width;
+                canvas.height = img.height;
+
+                ctx.drawImage(img, 0, 0, img.width, img.height);
+
+                const imageData = ctx.getImageData(0, 0, img.width, img.height);
+                const data = imageData.data;
+                let r = 0, g = 0, b = 0, count = 0;
+
+                for (let i = 0; i < data.length; i += 40) { 
+                    r += data[i];
+                    g += data[i + 1];
+                    b += data[i + 2];
+                    count++;
                 }
 
-                if (dados.configuracoes && dados.configuracoes.arte_fundo) {
-                    let linkImagem = obterLinkDiretoDrive(dados.configuracoes.arte_fundo);
-                    document.getElementById("fundo-arte").style.backgroundImage = `url('${linkImagem}')`;
-                }
-                
-                if (JSON.stringify(gabaritoCompleto) !== JSON.stringify(dados.gabarito)) {
-                    gabaritoCompleto = dados.gabarito;
-                    desenharTela();
-                }
-            } catch (erro) {
-                console.error("Erro na busca de dados:", erro);
-            }
-        }
+                r = Math.floor(r / count);
+                g = Math.floor(g / count);
+                b = Math.floor(b / count);
 
-        function desenharTela() {
-            const grid = document.getElementById("grid-respostas");
-            grid.innerHTML = ""; 
-
-            let inicio = paginaAtual * limitePorPagina;
-            let fim = inicio + limitePorPagina;
-            let paginacao = gabaritoCompleto.slice(inicio, fim);
-
-            paginacao.forEach(q => {
-                let box = document.createElement("div");
-                box.className = "questao-box";
-                
-                let textoLetra = q.resposta ? q.resposta : "";
-                let classeVazia = q.resposta.toString().trim() === "" ? "vazia" : "";
-
-                box.innerHTML = `
-                    <div class="numero">${q.numero}</div>
-                    <div class="letra ${classeVazia}">${textoLetra}</div>
-                `;
-                grid.appendChild(box);
-            });
-        }
-
-        function rotacionarPaginas() {
-            if (gabaritoCompleto.length > limitePorPagina) {
-                const grid = document.getElementById("grid-respostas");
-                
-                grid.style.opacity = "0";
-
-                setTimeout(() => {
-                    paginaAtual++;
-                    if ((paginaAtual * limitePorPagina) >= gabaritoCompleto.length) {
-                        paginaAtual = 0;
-                    }
-                    desenharTela();
-                    
-                    grid.style.opacity = "1";
-                }, 1200); 
-            }
-        }
-
-        atualizarDados();
-        setInterval(atualizarDados, 5000); 
-        setInterval(rotacionarPaginas, 120000); 
-    </script>
-</body>
-</html>
+                // CÁLCULO
