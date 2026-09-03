@@ -89,9 +89,12 @@
         
         const params = new URLSearchParams(window.location.search);
         const eventoID = params.get("evento");
-        const corParam = params.get("cor");
+        const corFundoParam = params.get("corFundo");
+        const corTextoParam = params.get("corTexto");
         
-        let corRetangulo = corParam ? decodeURIComponent(corParam) : "#4a2b82";
+        let corFundo = corFundoParam ? decodeURIComponent(corFundoParam) : "#4a2b82";
+        let corTexto = corTextoParam ? decodeURIComponent(corTextoParam) : "#ffffff";
+
         let gabaritoCompleto = [];
         let paginaAtual = 0;
         const limitePorPagina = 60; 
@@ -149,7 +152,7 @@
 
                 box.innerHTML = 
                     '<div class="numero">' + q.numero + '</div>' +
-                    '<div class="letra ' + classeVazia + '" style="background-color: ' + corRetangulo + ';">' + val + '</div>';
+                    '<div class="letra ' + classeVazia + '" style="background-color: ' + corFundo + '; color: ' + corTexto + ';">' + val + '</div>';
                 
                 grid.appendChild(box);
             });
