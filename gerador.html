@@ -109,6 +109,7 @@
             font-size: 15px;
             font-weight: 700;
             cursor: pointer;
+            transition: all 0.3s ease;
         }
 
         .btn-generate { background: linear-gradient(135deg, #0284c7 0%, #1d4ed8 100%); color: white; }
@@ -126,6 +127,53 @@
             font-size: 12px;
             word-break: break-all;
         }
+
+        /* CARD DE VÍDEOS / PASTA DO DRIVE */
+        .drive-box {
+            display: none;
+            margin-top: 18px;
+            text-align: left;
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 12px;
+            padding: 15px;
+        }
+
+        .drive-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .btn-drive-open {
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: bold;
+            flex: 1;
+            text-align: center;
+        }
+
+        .btn-drive-copy {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: bold;
+            flex: 1;
+            cursor: pointer;
+        }
+
+        .btn-drive-open:hover { background: #1d4ed8; }
+        .btn-drive-copy:hover { background: rgba(255, 255, 255, 0.2); }
 
         .preview-container {
             width: 800px;
@@ -156,9 +204,13 @@
             border-radius: 30px;
             font-weight: bold;
             display: none;
+            z-index: 100;
         }
     </style>
     <script>
+        const API_URL = "https://script.google.com/macros/s/AKfycbzZCCQoeVY2cRJSIlcHZCMY0LPUaH-MFhcwWp4yLgWt5NNpNm6_aZpY11gHGN9z9hPfWA/exec";
+        let linkDriveVideos = "";
+
         function gerarLink() {
             var input = document.getElementById('event-id');
             var id = input ? input.value.trim() : '';
@@ -169,11 +221,28 @@
             }
 
             atualizarUrlFinal();
+            buscarLinkVideosDrive(id);
 
             document.getElementById('color-section').style.display = 'block';
             document.getElementById('output-box').style.display = 'block';
             document.getElementById('btn-copy').style.display = 'block';
             document.getElementById('preview-container').style.display = 'block';
+        }
+
+        function buscarLinkVideosDrive(id) {
+            fetch(API_URL + "?evento=" + encodeURIComponent(id))
+                .then(res => res.json())
+                .then(dados => {
+                    if (dados.configuracoes && dados.configuracoes.link_videos) {
+                        linkDriveVideos = dados.configuracoes.link_videos;
+                        document.getElementById('drive-url-display').value = linkDriveVideos;
+                        document.getElementById('btn-open-drive').href = linkDriveVideos;
+                        document.getElementById('drive-box').style.display = 'block';
+                    } else {
+                        document.getElementById('drive-box').style.display = 'none';
+                    }
+                })
+                .catch(err => console.error("Erro ao buscar link de vídeos:", err));
         }
 
         function atualizarUrlFinal() {
@@ -198,8 +267,19 @@
             var urlInput = document.getElementById('generated-url');
             urlInput.select();
             navigator.clipboard.writeText(urlInput.value);
+            exibirToast("Link do vMix copiado!");
+        }
 
+        function copiarLinkDrive() {
+            if (linkDriveVideos) {
+                navigator.clipboard.writeText(linkDriveVideos);
+                exibirToast("Link da pasta de vídeos copiado!");
+            }
+        }
+
+        function exibirToast(mensagem) {
             var toast = document.getElementById('toast');
+            toast.innerText = mensagem;
             toast.style.display = 'block';
             setTimeout(function() { toast.style.display = 'none'; }, 2500);
         }
@@ -227,6 +307,16 @@
                 <div class="custom-color-row">
                     <label style="margin: 0;">Cor da Letra:</label>
                     <input type="color" id="color-text" value="#ffffff" onchange="atualizarUrlFinal()">
+                </div>
+            </div>
+
+            <!-- ÁREA NOVA PARA VÍDEOS DO EVENTO (GOOGLE DRIVE) -->
+            <div class="drive-box" id="drive-box">
+                <label>Pasta de Vídeos / Mídias do Evento:</label>
+                <input type="text" class="output-url" id="drive-url-display" readonly style="margin-top: 5px;">
+                <div class="drive-actions">
+                    <a href="#" id="btn-open-drive" target="_blank" class="btn-drive-open">📂 Abrir Pasta</a>
+                    <button type="button" class="btn-drive-copy" onclick="copiarLinkDrive()">📋 Copiar Link</button>
                 </div>
             </div>
 
