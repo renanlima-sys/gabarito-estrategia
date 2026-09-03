@@ -2,10 +2,11 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gabarito Estratégia</title>
     <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body { 
-            margin: 0; 
             width: 1920px; 
             height: 1080px; 
             background-color: transparent; 
@@ -38,7 +39,6 @@
             row-gap: 3px; 
             column-gap: 8px; 
             padding: 8px; 
-            box-sizing: border-box;
             color: black; 
             opacity: 1;
             transition: opacity 1.2s ease-in-out;
@@ -48,7 +48,6 @@
             display: flex; 
             align-items: center; 
             justify-content: flex-start; 
-            font-size: 26px; 
         }
 
         .numero { 
@@ -74,8 +73,7 @@
         }
 
         .letra.vazia { background-color: #f0f0f0 !important; color: transparent !important; box-shadow: none; }
-        
-        .aviso { color: black; font-size: 20px; grid-column: span 4; text-align: center; margin-top: 50px;}
+        .aviso { color: #ffffff; background: rgba(0,0,0,0.8); padding: 15px; border-radius: 8px; font-size: 20px; grid-column: span 4; text-align: center; margin-top: 50px;}
     </style>
 </head>
 <body>
@@ -83,7 +81,7 @@
     <div id="fundo-arte"></div>
 
     <div class="grid-container" id="grid-respostas">
-        <div class="aviso">Carregando dados da planilha...</div>
+        <div class="aviso" id="status-msg">Carregando dados da planilha...</div>
     </div>
 
     <script>
@@ -98,47 +96,39 @@
 
         function converterLinkDrive(url) {
             if (!url) return "";
-            if (url.includes("drive.google.com")) {
-                var id = url.match(/[-\w]{25,}/);
-                if (id) {
-                    return "https://lh3.googleusercontent.com/d/" + id[0];
-                }
-            }
-            return url;
+            var match = url.match(/[-\w]{25,}/);
+            return match ? 'https://lh3.googleusercontent.com/d/' + match[0] : url;
         }
 
-        async function atualizarDados() {
+        function carregarDadosJSONP() {
             if (!eventoID) {
-                document.getElementById("grid-respostas").innerHTML = "<div class='aviso'>Erro: Nenhum ID informado. Ex: ?evento=178150</div>";
+                document.getElementById("status-msg").innerText = "Erro: Nenhum ID informado no link (?evento=ID)";
                 return;
             }
 
-            try {
-                let resposta = await fetch(API_URL + "?evento=" + eventoID);
-                let dados = await resposta.json();
-
-                if (dados.erro) {
-                    document.getElementById("grid-respostas").innerHTML = "<div class='aviso'>" + dados.erro + "</div>";
-                    return;
-                }
-
-                // TENTA CARREGAR A IMAGEM SEM TRAVAR O RESTO DO CÓDIGO
-                if (dados.configuracoes && dados.configuracoes.arte_fundo) {
-                    try {
-                        let linkImagem = converterLinkDrive(dados.configuracoes.arte_fundo);
-                        document.getElementById("fundo-arte").style.backgroundImage = "url('" + linkImagem + "')";
-                    } catch (e) {
-                        console.warn("Não foi possível carregar a imagem de fundo:", e);
+            // Requisição com tratamento de erro
+            fetch(API_URL + "?evento=" + eventoID)
+                .then(function(res) { return res.json(); })
+                .then(function(dados) {
+                    if (dados.erro) {
+                        document.getElementById("status-msg").innerText = dados.erro;
+                        return;
                     }
-                }
-                
-                if (dados.gabarito) {
-                    gabaritoCompleto = dados.gabarito;
-                    desenharTela();
-                }
-            } catch (erro) {
-                console.error("Erro na busca dos dados:", erro);
-            }
+
+                    if (dados.configuracoes && dados.configuracoes.arte_fundo) {
+                        var linkImg = converterLinkDrive(dados.configuracoes.arte_fundo);
+                        document.getElementById("fundo-arte").style.backgroundImage = "url('" + linkImg + "')";
+                    }
+
+                    if (dados.gabarito && Array.isArray(dados.gabarito)) {
+                        gabaritoCompleto = dados.gabarito;
+                        desenharTela();
+                    }
+                })
+                .catch(function(err) {
+                    console.error(err);
+                    document.getElementById("status-msg").innerText = "Erro de Conexão com o Google Apps Script.";
+                });
         }
 
         function desenharTela() {
@@ -153,12 +143,12 @@
                 let box = document.createElement("div");
                 box.className = "questao-box";
                 
-                let textoLetra = (q.resposta !== undefined && q.resposta !== null) ? q.resposta : "";
-                let classeVazia = String(textoLetra).trim() === "" ? "vazia" : "";
+                let val = (q.resposta !== undefined && q.resposta !== null) ? String(q.resposta).trim() : "";
+                let classeVazia = val === "" ? "vazia" : "";
 
                 box.innerHTML = 
                     '<div class="numero">' + q.numero + '</div>' +
-                    '<div class="letra ' + classeVazia + '">' + textoLetra + '</div>';
+                    '<div class="letra ' + classeVazia + '">' + val + '</div>';
                 
                 grid.appendChild(box);
             });
@@ -176,4 +166,13 @@
                     }
                     desenharTela();
                     grid.style.opacity = "1";
-                }, 1200);
+                }, 1200); 
+            }
+        }
+
+        carregarDadosJSONP();
+        setInterval(carregarDadosJSONP, 5000); 
+        setInterval(rotacionarPaginas, 120000); 
+    </script>
+</body>
+</html>
