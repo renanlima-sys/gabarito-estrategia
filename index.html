@@ -24,21 +24,20 @@
             z-index: 1; 
         }
 
-        /* CONTAINER RESTRITO E CENTRALIZADO DENTRO DA AREA BRANCA */
         .grid-container { 
             position: absolute;
-            top: 200px;    /* Distância em pixels em relação ao TOPO da tela. (Aumente para DESCER, diminua para SUBIR) */
-            left: 12px;    /* Distância em pixels em relação à ESQUERDA da tela. (Aumente para ir para a DIREITA) */
-            width: 610px;  /* LARGURA total da grade de questões. (Aumente para esticar para os lados) */
-            height: 630px; /* ALTURA total da grade de questões. (Aumente para esticar para baixo) */
+            top: 200px; 
+            left: 12px; 
+            width: 610px; 
+            height: 630px; 
             z-index: 2; 
             display: grid; 
-            grid-template-rows: repeat(15, 1fr);   /* Cria 15 linhas de tamanho igual */
-            grid-template-columns: repeat(4, 1fr); /* Cria 4 colunas de tamanho igual */
-            grid-auto-flow: column;                /* Ordena na vertical (1 a 15 na col 1, 16 a 30 na col 2...) */
-            row-gap: 2px; /* Espaço vazio entre as linhas na vertical */
-            column-gap: 2px; /* Espaço vazio entre as colunas na horizontal */
-            padding: 10px 8px; /* Margem interna de segurança das bordas */
+            grid-template-rows: repeat(15, 1fr); 
+            grid-template-columns: repeat(4, 1fr); 
+            grid-auto-flow: column; 
+            row-gap: 2px; 
+            column-gap: 2px; 
+            padding: 10px 8px; 
             box-sizing: border-box;
             color: black; 
         }
@@ -51,20 +50,20 @@
         }
 
         .numero { 
-            width: 32px; /* Largura reservada para o número */
-            text-align: right; /* Alinha o número à direita para encostar na bolinha */
-            margin-right: 12px; /* Distância (em pixels) entre o número e a bolinha roxa */
-            font-weight: 800; /* Espessura da fonte (800 = negrito forte, 400 = normal) */
+            width: 32px; 
+            text-align: right; 
+            margin-right: 12px; 
+            font-weight: 800; 
         }
         
         .letra { 
-            width: 44px;    /* LARGURA da bolinha roxa (Ex: mude para 48px se quiser maior) */
-            height: 44px;   /* ALTURA da bolinha roxa (Mantenha igual à largura para ficar redonda) */
-            font-size: 26px; /* TAMANHO DA LETRA (A, B, C, D, E) dentro da bolinha */
-            font-weight: 800; /* Deixa a letra interna em negrito */
-            background-color: #4a2b82; /* Cor roxa da bolinha */
-            color: white; /* Cor da letra */
-            border-radius: 50%; /* Transforma o quadrado em círculo perfeito */
+            width: 44px; 
+            height: 44px; 
+            font-size: 26px; 
+            font-weight: 800; 
+            background-color: #4a2b82; 
+            color: white; 
+            border-radius: 50%; 
             display: flex; 
             align-items: center; 
             justify-content: center; 
@@ -94,11 +93,16 @@
         let paginaAtual = 0;
         const limitePorPagina = 60; 
 
+        // TRATAMENTO NATIVO DO LINK DO GOOGLE DRIVE
         function obterLinkDiretoDrive(url) {
             if (!url) return "";
-            let match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+            
+            // Extrai o ID do arquivo de links normais ou de compartilhamento
+            let match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
+            
             if (match && match[1]) {
-                return `https://drive.google.com/uc?export=view&id=${match[1]}`;
+                // Converte para a CDN de alta performance do Googleusercontent sem bloqueios de CORS
+                return `https://lh3.googleusercontent.com/d/${match[1]}`;
             }
             return url; 
         }
@@ -167,7 +171,7 @@
 
         atualizarDados();
         setInterval(atualizarDados, 5000); 
-        setInterval(rotacionarPaginas, 120000); 
+        setInterval(rotacionarPaginas, 120000); // 120 segundos para alterar página
     </script>
 </body>
 </html>
