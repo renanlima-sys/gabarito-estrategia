@@ -12,107 +12,115 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        /* FUNDO DEGRADÊ ANIMADO EM CSS PURO */
+        /* FUNDO DEGRADÊ ANIMADO */
         body {
             background-color: #03020c;
             background-image: 
-                radial-gradient(circle at 15% 85%, #6a0ba8 0%, transparent 55%),
-                radial-gradient(circle at 45% 35%, #0d1b7a 0%, transparent 60%),
-                radial-gradient(circle at 85% 15%, #05051a 0%, transparent 50%);
-            background-size: 180% 180%;
-            animation: moverDegrade 15s ease infinite alternate;
+                radial-gradient(circle at 20% 80%, #7c12b3 0%, transparent 50%),
+                radial-gradient(circle at 50% 20%, #0d2bb5 0%, transparent 55%),
+                radial-gradient(circle at 80% 80%, #b83280 0%, transparent 45%);
+            background-size: 160% 160%;
+            animation: moverDegrade 12s ease infinite alternate;
             color: #ffffff;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center; /* CENTRALIZA VERTICALMENTE */
             padding: 40px 20px;
         }
 
-        /* ANIMAÇÃO DE MOVIMENTO CONTÍNUO */
         @keyframes moverDegrade {
-            0% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-            100% {
-                background-position: 0% 50%;
-            }
+            0% { background-position: 0% 30%; }
+            50% { background-position: 100% 70%; }
+            100% { background-position: 0% 30%; }
         }
 
-        .header {
+        /* CARD ESTILO GLASSMORPHISM AVANÇADO */
+        .card-control {
+            background: rgba(255, 255, 255, 0.05); /* Transparência de vidro */
+            backdrop-filter: blur(20px); /* Desfoque do fundo */
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.18); /* Borda fina iluminada */
+            border-radius: 24px;
+            padding: 40px 35px;
+            width: 100%;
+            max-width: 550px;
+            box-shadow: 
+                0 20px 50px rgba(0, 0, 0, 0.5),
+                inset 0 1px 1px rgba(255, 255, 255, 0.3); /* Reflexo interno de luz */
             text-align: center;
             margin-bottom: 30px;
         }
 
+        .header {
+            margin-bottom: 28px;
+        }
+
         .header h1 {
             font-size: 32px;
+            font-weight: 700;
             color: #ffffff;
             margin-bottom: 8px;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            letter-spacing: -0.5px;
+            text-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
 
         .header p {
-            color: #b3a5d0;
-            font-size: 16px;
-        }
-
-        /* CARD SEMI-TRANSPARENTE (GLASSMORPHISM) */
-        .card-control {
-            background: rgba(18, 10, 36, 0.75);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(124, 77, 255, 0.25);
-            border-radius: 16px;
-            padding: 30px;
-            width: 100%;
-            max-width: 600px;
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
-            margin-bottom: 30px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 15px;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 22px;
+            text-align: left;
         }
 
         label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
+            font-size: 14px;
             font-weight: 600;
-            color: #e0e0e0;
+            color: rgba(255, 255, 255, 0.9);
         }
 
         input[type="text"] {
             width: 100%;
-            padding: 14px;
-            border-radius: 8px;
-            border: 2px solid rgba(124, 77, 255, 0.4);
-            background-color: rgba(5, 3, 15, 0.8);
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background-color: rgba(0, 0, 0, 0.35);
             color: #fff;
-            font-size: 18px;
+            font-size: 16px;
             outline: none;
-            transition: border-color 0.3s;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+        }
+
+        input[type="text"]::placeholder {
+            color: rgba(255, 255, 255, 0.35);
         }
 
         input[type="text"]:focus {
-            border-color: #9d6bff;
+            border-color: rgba(168, 85, 247, 0.8);
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.4), inset 0 2px 4px rgba(0, 0, 0, 0.4);
         }
 
         .actions {
             display: flex;
+            flex-direction: column;
             gap: 12px;
         }
 
         button {
-            flex: 1;
-            padding: 14px;
-            border: none;
-            border-radius: 8px;
+            width: 100%;
+            padding: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
             font-size: 16px;
-            font-weight: bold;
+            font-weight: 700;
             cursor: pointer;
-            transition: background-color 0.2s, transform 0.1s;
+            transition: all 0.3s ease;
         }
 
         button:active {
@@ -120,86 +128,90 @@
         }
 
         .btn-generate {
-            background-color: #7c4dff;
+            background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
             color: white;
-            box-shadow: 0 4px 15px rgba(124, 77, 255, 0.4);
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.35);
         }
 
         .btn-generate:hover {
-            background-color: #651fff;
+            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.55);
+            filter: brightness(1.1);
         }
 
         .btn-copy {
-            background-color: #00e676;
-            color: #000;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: #ffffff;
             display: none;
-            box-shadow: 0 4px 15px rgba(0, 230, 118, 0.3);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.35);
         }
 
         .btn-copy:hover {
-            background-color: #00c853;
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.55);
+            filter: brightness(1.1);
         }
 
         .output-box {
             margin-top: 20px;
             display: none;
+            text-align: left;
         }
 
         .output-url {
             width: 100%;
-            padding: 12px;
-            background: rgba(15, 8, 35, 0.9);
-            border: 1px dashed #7c4dff;
-            border-radius: 6px;
-            color: #00e676;
+            padding: 14px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px dashed rgba(168, 85, 247, 0.5);
+            border-radius: 8px;
+            color: #34d399;
             font-family: monospace;
-            font-size: 14px;
+            font-size: 13px;
             word-break: break-all;
         }
 
-        /* ÁREA DE PREVIEW */
+        /* ÁREA DE PREVIEW CENTRALIZADA */
         .preview-container {
             width: 100%;
-            max-width: 960px;
-            height: 540px;
-            border: 1px solid rgba(124, 77, 255, 0.3);
-            border-radius: 16px;
+            max-width: 800px;
+            height: 450px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
             overflow: hidden;
             background-color: #000;
             display: none;
             position: relative;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
         }
 
         iframe {
             width: 1920px;
             height: 1080px;
             border: none;
-            transform: scale(0.5);
+            transform: scale(0.4166); /* Ajuste de escala proporcional para 800px */
             transform-origin: 0 0;
         }
 
         .toast {
             position: fixed;
-            bottom: 20px;
-            background-color: #00e676;
-            color: #000;
-            padding: 12px 24px;
+            bottom: 30px;
+            background-color: #10b981;
+            color: #ffffff;
+            padding: 12px 28px;
             border-radius: 30px;
             font-weight: bold;
             display: none;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
         }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <h1>Gabaritos Estratégia</h1>
-        <p>Gerador de overlays de gabarito em tempo real</p>
-    </div>
-
     <div class="card-control">
+        <div class="header">
+            <h1>Gabaritos Estratégia</h1>
+            <p>Gerador de overlays de gabarito em tempo real</p>
+        </div>
+
         <div class="form-group">
             <label for="event-id">ID do Agendamento:</label>
             <input type="text" id="event-id" placeholder="INSERIR O ID DO INTRA AQUI!" autocomplete="off">
