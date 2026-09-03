@@ -56,24 +56,24 @@
             text-align: right; 
             margin-right: 12px; 
             font-weight: 800; 
-        }
+        } 
         
-        /* RETÂNGULO COM BORDAS ARREDONDADAS */
+        /* RETÂNGULO COM BORDAS ARREDONDADAS (NOVO FORMATO) */
         .letra { 
-            width: 48px; 
-            height: 38px; 
+            width: 46px; 
+            height: 36px; 
             font-size: 24px; 
             font-weight: 800; 
             background-color: #4a2b82; 
-            color: white; 
+            color: #ffffff; 
             border-radius: 8px; /* Arredondamento dos cantos */
             display: flex; 
             align-items: center; 
             justify-content: center; 
-            transition: background-color 0.5s ease, color 0.5s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
-        .letra.vazia { background-color: #f0f0f0 !important; color: transparent !important; }
+        .letra.vazia { background-color: #f0f0f0 !important; color: transparent !important; box-shadow: none; }
         
         .aviso { color: black; font-size: 20px; grid-column: span 4; text-align: center; margin-top: 50px;}
     </style>
@@ -95,10 +95,6 @@
         let gabaritoCompleto = [];
         let paginaAtual = 0;
         const limitePorPagina = 60; 
-        
-        let corBolinhaDetectada = "#4a2b82";
-        let corTextoDetectada = "#ffffff";
-        let arteCarregadaURL = "";
 
         function obterLinkDiretoDrive(url) {
             if (!url) return "";
@@ -107,47 +103,6 @@
                 return `https://lh3.googleusercontent.com/d/${match[1]}`;
             }
             return url; 
-        }
-
-        function extrairCorDaImagem(urlImagem) {
-            if (arteCarregadaURL === urlImagem) return;
-            arteCarregadaURL = urlImagem;
-
-            const img = new Image();
-            img.crossOrigin = "Anonymous"; 
-            img.src = urlImagem;
-
-            img.onload = function() {
-                const canvas = document.createElement("canvas");
-                const ctx = canvas.getContext("2d");
-                canvas.width = img.width;
-                canvas.height = img.height;
-
-                ctx.drawImage(img, 0, 0, img.width, img.height);
-
-                const imageData = ctx.getImageData(0, 0, img.width, img.height);
-                const data = imageData.data;
-                let r = 0, g = 0, b = 0, count = 0;
-
-                for (let i = 0; i < data.length; i += 40) { 
-                    r += data[i];
-                    g += data[i + 1];
-                    b += data[i + 2];
-                    count++;
-                }
-
-                r = Math.floor(r / count);
-                g = Math.floor(g / count);
-                b = Math.floor(b / count);
-
-                corBolinhaDetectada = `rgb(${r}, ${g}, ${b})`;
-
-                // Cálculo de luminância para definir cor da letra (preto ou branco)
-                const luminancia = (0.299 * r + 0.587 * g + 0.114 * b);
-                corTextoDetectada = (luminancia > 128) ? "#000000" : "#ffffff";
-
-                desenharTela();
-            };
         }
 
         async function atualizarDados() {
@@ -168,7 +123,6 @@
                 if (dados.configuracoes && dados.configuracoes.arte_fundo) {
                     let linkImagem = obterLinkDiretoDrive(dados.configuracoes.arte_fundo);
                     document.getElementById("fundo-arte").style.backgroundImage = `url('${linkImagem}')`;
-                    extrairCorDaImagem(linkImagem);
                 }
                 
                 if (JSON.stringify(gabaritoCompleto) !== JSON.stringify(dados.gabarito)) {
@@ -197,7 +151,7 @@
 
                 box.innerHTML = `
                     <div class="numero">${q.numero}</div>
-                    <div class="letra ${classeVazia}" style="background-color: ${corBolinhaDetectada}; color: ${corTextoDetectada};">${textoLetra}</div>
+                    <div class="letra ${classeVazia}">${textoLetra}</div>
                 `;
                 grid.appendChild(box);
             });
