@@ -58,15 +58,15 @@
             font-weight: 800; 
         }
         
+        /* RETÂNGULO COM BORDAS ARREDONDADAS */
         .letra { 
-            width: 44px; 
-            height: 44px; 
-            font-size: 26px; 
+            width: 48px; 
+            height: 38px; 
+            font-size: 24px; 
             font-weight: 800; 
-            /* Cores padrão caso ainda não tenha detectado a arte */
             background-color: #4a2b82; 
             color: white; 
-            border-radius: 50%; 
+            border-radius: 8px; /* Arredondamento dos cantos */
             display: flex; 
             align-items: center; 
             justify-content: center; 
@@ -96,7 +96,6 @@
         let paginaAtual = 0;
         const limitePorPagina = 60; 
         
-        // Guardam a cor identificada automaticamente
         let corBolinhaDetectada = "#4a2b82";
         let corTextoDetectada = "#ffffff";
         let arteCarregadaURL = "";
@@ -110,7 +109,6 @@
             return url; 
         }
 
-        // FUNÇÃO QUE EXTRAI A COR DOMINANTE E DEFINE O CONTRASTE
         function extrairCorDaImagem(urlImagem) {
             if (arteCarregadaURL === urlImagem) return;
             arteCarregadaURL = urlImagem;
@@ -127,7 +125,6 @@
 
                 ctx.drawImage(img, 0, 0, img.width, img.height);
 
-                // Amostra a imagem em grade para calcular a cor média da arte
                 const imageData = ctx.getImageData(0, 0, img.width, img.height);
                 const data = imageData.data;
                 let r = 0, g = 0, b = 0, count = 0;
@@ -145,7 +142,7 @@
 
                 corBolinhaDetectada = `rgb(${r}, ${g}, ${b})`;
 
-                // CALCULA LUMINÂNCIA PARA DETERMINAR CONTRASTE (PRETO OU BRANCO)
+                // Cálculo de luminância para definir cor da letra (preto ou branco)
                 const luminancia = (0.299 * r + 0.587 * g + 0.114 * b);
                 corTextoDetectada = (luminancia > 128) ? "#000000" : "#ffffff";
 
