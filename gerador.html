@@ -81,34 +81,19 @@
             border: 1px solid rgba(56, 189, 248, 0.15);
         }
 
-        .color-presets {
-            display: flex;
-            gap: 10px;
-            margin-top: 8px;
-            margin-bottom: 12px;
-        }
-
-        .color-dot {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            cursor: pointer;
-            border: 2px solid transparent;
-            transition: transform 0.2s;
-        }
-
-        .color-dot:hover { transform: scale(1.1); }
-
         .custom-color-row {
             display: flex;
             align-items: center;
-            gap: 10px;
+            justify-content: space-between;
+            margin-bottom: 10px;
         }
+
+        .custom-color-row:last-child { margin-bottom: 0; }
 
         input[type="color"] {
             border: none;
-            width: 40px;
-            height: 40px;
+            width: 42px;
+            height: 42px;
             border-radius: 8px;
             cursor: pointer;
             background: none;
@@ -174,8 +159,6 @@
         }
     </style>
     <script>
-        var corSelecionada = "#4a2b82";
-
         function gerarLink() {
             var input = document.getElementById('event-id');
             var id = input ? input.value.trim() : '';
@@ -193,17 +176,17 @@
             document.getElementById('preview-container').style.display = 'block';
         }
 
-        function selecionarCor(hex) {
-            corSelecionada = hex;
-            document.getElementById('custom-color').value = hex;
-            atualizarUrlFinal();
-        }
-
         function atualizarUrlFinal() {
             var input = document.getElementById('event-id');
             var id = input ? input.value.trim() : '';
+
+            var corFundo = document.getElementById('color-bg').value;
+            var corTexto = document.getElementById('color-text').value;
+
             var baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/')) + '/index.html';
-            var urlFinal = baseUrl + '?evento=' + encodeURIComponent(id) + '&cor=' + encodeURIComponent(corSelecionada);
+            var urlFinal = baseUrl + '?evento=' + encodeURIComponent(id) + 
+                           '&corFundo=' + encodeURIComponent(corFundo) + 
+                           '&corTexto=' + encodeURIComponent(corTexto);
 
             document.getElementById('generated-url').value = urlFinal;
 
@@ -237,18 +220,13 @@
             </div>
 
             <div class="color-picker-container" id="color-section">
-                <label>Cor dos Retângulos do Gabarito:</label>
-                <div class="color-presets">
-                    <div class="color-dot" style="background-color: #4a2b82;" onclick="selecionarCor('#4a2b82')"></div>
-                    <div class="color-dot" style="background-color: #1d4ed8;" onclick="selecionarCor('#1d4ed8')"></div>
-                    <div class="color-dot" style="background-color: #0284c7;" onclick="selecionarCor('#0284c7')"></div>
-                    <div class="color-dot" style="background-color: #059669;" onclick="selecionarCor('#059669')"></div>
-                    <div class="color-dot" style="background-color: #dc2626;" onclick="selecionarCor('#dc2626')"></div>
-                    <div class="color-dot" style="background-color: #0f172a;" onclick="selecionarCor('#0f172a')"></div>
+                <div class="custom-color-row">
+                    <label style="margin: 0;">Cor do Retângulo:</label>
+                    <input type="color" id="color-bg" value="#4a2b82" onchange="atualizarUrlFinal()">
                 </div>
                 <div class="custom-color-row">
-                    <label style="margin: 0; font-size: 12px;">Cor Personalizada:</label>
-                    <input type="color" id="custom-color" value="#4a2b82" onchange="selecionarCor(this.value)">
+                    <label style="margin: 0;">Cor da Letra:</label>
+                    <input type="color" id="color-text" value="#ffffff" onchange="atualizarUrlFinal()">
                 </div>
             </div>
 
