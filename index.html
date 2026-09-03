@@ -40,7 +40,6 @@
             padding: 10px 8px; 
             box-sizing: border-box;
             color: black; 
-            /* TRANSIÇÃO MAIS SUAVE (1.2 SEGUNDOS) */
             opacity: 1;
             transition: opacity 1.2s ease-in-out;
         }
@@ -64,16 +63,17 @@
             height: 44px; 
             font-size: 26px; 
             font-weight: 800; 
+            /* Cores padrão caso ainda não tenha detectado a arte */
             background-color: #4a2b82; 
             color: white; 
             border-radius: 50%; 
             display: flex; 
             align-items: center; 
             justify-content: center; 
-            transition: all 0.3s ease;
+            transition: background-color 0.5s ease, color 0.5s ease;
         }
 
-        .letra.vazia { background-color: #f0f0f0; color: transparent; }
+        .letra.vazia { background-color: #f0f0f0 !important; color: transparent !important; }
         
         .aviso { color: black; font-size: 20px; grid-column: span 4; text-align: center; margin-top: 50px;}
     </style>
@@ -95,6 +95,11 @@
         let gabaritoCompleto = [];
         let paginaAtual = 0;
         const limitePorPagina = 60; 
+        
+        // Guardam a cor identificada automaticamente
+        let corBolinhaDetectada = "#4a2b82";
+        let corTextoDetectada = "#ffffff";
+        let arteCarregadaURL = "";
 
         function obterLinkDiretoDrive(url) {
             if (!url) return "";
@@ -103,6 +108,49 @@
                 return `https://lh3.googleusercontent.com/d/${match[1]}`;
             }
             return url; 
+        }
+
+        // FUNÇÃO QUE EXTRAI A COR DOMINANTE E DEFINE O CONTRASTE
+        function extrairCorDaImagem(urlImagem) {
+            if (arteCarregadaURL === urlImagem) return;
+            arteCarregadaURL = urlImagem;
+
+            const img = new Image();
+            img.crossOrigin = "Anonymous"; 
+            img.src = urlImagem;
+
+            img.onload = function() {
+                const canvas = document.createElement("canvas");
+                const ctx = canvas.getContext("2d");
+                canvas.width = img.width;
+                canvas.height = img.height;
+
+                ctx.drawImage(img, 0, 0, img.width, img.height);
+
+                // Amostra a imagem em grade para calcular a cor média da arte
+                const imageData = ctx.getImageData(0, 0, img.width, img.height);
+                const data = imageData.data;
+                let r = 0, g = 0, b = 0, count = 0;
+
+                for (let i = 0; i < data.length; i += 40) { 
+                    r += data[i];
+                    g += data[i + 1];
+                    b += data[i + 2];
+                    count++;
+                }
+
+                r = Math.floor(r / count);
+                g = Math.floor(g / count);
+                b = Math.floor(b / count);
+
+                corBolinhaDetectada = `rgb(${r}, ${g}, ${b})`;
+
+                // CALCULA LUMINÂNCIA PARA DETERMINAR CONTRASTE (PRETO OU BRANCO)
+                const luminancia = (0.299 * r + 0.587 * g + 0.114 * b);
+                corTextoDetectada = (luminancia > 128) ? "#000000" : "#ffffff";
+
+                desenharTela();
+            };
         }
 
         async function atualizarDados() {
@@ -123,6 +171,7 @@
                 if (dados.configuracoes && dados.configuracoes.arte_fundo) {
                     let linkImagem = obterLinkDiretoDrive(dados.configuracoes.arte_fundo);
                     document.getElementById("fundo-arte").style.backgroundImage = `url('${linkImagem}')`;
+                    extrairCorDaImagem(linkImagem);
                 }
                 
                 if (JSON.stringify(gabaritoCompleto) !== JSON.stringify(dados.gabarito)) {
@@ -151,18 +200,16 @@
 
                 box.innerHTML = `
                     <div class="numero">${q.numero}</div>
-                    <div class="letra ${classeVazia}">${textoLetra}</div>
+                    <div class="letra ${classeVazia}" style="background-color: ${corBolinhaDetectada}; color: ${corTextoDetectada};">${textoLetra}</div>
                 `;
                 grid.appendChild(box);
             });
         }
 
-        // ROTAÇÃO SUAVE COM TRANSIÇÃO LENTA (1.2 SEGUNDOS)
         function rotacionarPaginas() {
             if (gabaritoCompleto.length > limitePorPagina) {
                 const grid = document.getElementById("grid-respostas");
                 
-                // Esmaece para sumir
                 grid.style.opacity = "0";
 
                 setTimeout(() => {
@@ -172,9 +219,8 @@
                     }
                     desenharTela();
                     
-                    // Reaparece suavemente
                     grid.style.opacity = "1";
-                }, 1200); // Aguarda o tempo exato do fade out
+                }, 1200); 
             }
         }
 
