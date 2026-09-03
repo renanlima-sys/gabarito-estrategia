@@ -12,7 +12,7 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        /* FUNDO DEGRADÊ ANIMADO - APENAS TONS DE AZUL PARA PRETO */
+        /* FUNDO DEGRADÊ ANIMADO EM TONS DE AZUL E PRETO */
         body {
             background-color: #020617;
             background-image: 
@@ -27,7 +27,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 40px 20px;
+            padding: 20px;
         }
 
         @keyframes moverDegrade {
@@ -36,62 +36,73 @@
             100% { background-position: 0% 30%; }
         }
 
-        /* CARD ESTILO GLASSMORPHISM AVANÇADO */
+        /* CONTAINER PRINCIPAL LADO A LADO (FLEXBOX) */
+        .main-container {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 30px;
+            width: 100%;
+            max-width: 1400px;
+            margin-bottom: 20px;
+        }
+
+        /* PAINEL DE CONTROLE (LADO ESQUERDO) */
         .card-control {
             background: rgba(255, 255, 255, 0.04);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(56, 189, 248, 0.2);
             border-radius: 24px;
-            padding: 40px 35px;
-            width: 100%;
-            max-width: 550px;
+            padding: 35px 30px;
+            width: 450px;
+            flex-shrink: 0;
             box-shadow: 
                 0 20px 50px rgba(0, 0, 0, 0.6),
                 inset 0 1px 1px rgba(255, 255, 255, 0.2);
             text-align: center;
-            margin-bottom: 25px;
         }
 
         .header {
-            margin-bottom: 28px;
+            margin-bottom: 25px;
         }
 
         .header h1 {
-            font-size: 32px;
+            font-size: 28px;
             font-weight: 700;
             color: #ffffff;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             letter-spacing: -0.5px;
             text-shadow: 0 4px 12px rgba(0,0,0,0.5);
         }
 
         .header p {
             color: rgba(224, 242, 254, 0.8);
-            font-size: 15px;
+            font-size: 14px;
         }
 
         .form-group {
-            margin-bottom: 22px;
+            margin-bottom: 20px;
             text-align: left;
         }
 
         label {
             display: block;
-            margin-bottom: 10px;
-            font-size: 14px;
+            margin-bottom: 8px;
+            font-size: 13px;
             font-weight: 600;
             color: rgba(240, 249, 255, 0.9);
         }
 
         input[type="text"] {
             width: 100%;
-            padding: 16px;
+            padding: 14px;
             border-radius: 12px;
             border: 1px solid rgba(56, 189, 248, 0.25);
             background-color: rgba(2, 6, 23, 0.6);
             color: #fff;
-            font-size: 16px;
+            font-size: 15px;
             outline: none;
             transition: all 0.3s ease;
             box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
@@ -114,10 +125,10 @@
 
         button {
             width: 100%;
-            padding: 16px;
+            padding: 14px;
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 12px;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -151,27 +162,26 @@
         }
 
         .output-box {
-            margin-top: 20px;
+            margin-top: 18px;
             display: none;
             text-align: left;
         }
 
         .output-url {
             width: 100%;
-            padding: 14px;
+            padding: 12px;
             background: rgba(2, 6, 23, 0.8);
             border: 1px dashed rgba(56, 189, 248, 0.5);
             border-radius: 8px;
             color: #34d399;
             font-family: monospace;
-            font-size: 13px;
+            font-size: 12px;
             word-break: break-all;
         }
 
-        /* ÁREA DE PREVIEW CENTRALIZADA */
+        /* ÁREA DE PREVIEW (LADO DIREITO) */
         .preview-container {
-            width: 100%;
-            max-width: 800px;
+            width: 800px;
             height: 450px;
             border: 1px solid rgba(56, 189, 248, 0.3);
             border-radius: 20px;
@@ -181,25 +191,25 @@
             position: relative;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(10px);
-            margin-bottom: 25px;
+            flex-shrink: 0;
         }
 
         iframe {
             width: 1920px;
             height: 1080px;
             border: none;
-            transform: scale(0.4166);
+            transform: scale(0.4166); /* Escala para caber em 800x450 */
             transform-origin: 0 0;
         }
 
-        /* ESTILO DA LOGO NO RODAPÉ */
+        /* RODAPÉ COM LOGO */
         .footer-logo {
-            margin-top: 15px;
+            margin-top: 10px;
             text-align: center;
         }
 
         .footer-logo img {
-            max-width: 190px;
+            max-width: 160px;
             height: auto;
             opacity: 0.85;
             transition: opacity 0.3s ease;
@@ -220,37 +230,57 @@
             display: none;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
         }
+
+        /* RESPONSIVIDADE PARA TELAS MENORES */
+        @media (max-width: 1300px) {
+            .main-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            .card-control {
+                width: 100%;
+                max-width: 550px;
+            }
+            .preview-container {
+                width: 100%;
+                max-width: 800px;
+            }
+        }
     </style>
 </head>
 <body>
 
-    <div class="card-control">
-        <div class="header">
-            <h1>Gabaritos Estratégia</h1>
-            <p>Gerador de overlays de gabarito em tempo real</p>
+    <div class="main-container">
+        <!-- LADO ESQUERDO: CONTROLE -->
+        <div class="card-control">
+            <div class="header">
+                <h1>Gabaritos Estratégia</h1>
+                <p>Gerador de overlays de gabarito em tempo real</p>
+            </div>
+
+            <div class="form-group">
+                <label for="event-id">ID do Agendamento:</label>
+                <input type="text" id="event-id" placeholder="INSERIR O ID DO INTRA AQUI!" autocomplete="off">
+            </div>
+
+            <div class="actions">
+                <button class="btn-generate" onclick="gerarLink()">Carregar & Pré-visualizar</button>
+                <button class="btn-copy" id="btn-copy" onclick="copiarLink()">Copiar Link do vMix</button>
+            </div>
+
+            <div class="output-box" id="output-box">
+                <label style="margin-top: 12px;">URL Gerada para a entrada Web Browser do vMix:</label>
+                <input type="text" class="output-url" id="generated-url" readonly>
+            </div>
         </div>
 
-        <div class="form-group">
-            <label for="event-id">ID do Agendamento:</label>
-            <input type="text" id="event-id" placeholder="INSERIR O ID DO INTRA AQUI!" autocomplete="off">
-        </div>
-
-        <div class="actions">
-            <button class="btn-generate" onclick="gerarLink()">Carregar & Pré-visualizar</button>
-            <button class="btn-copy" id="btn-copy" onclick="copiarLink()">Copiar Link do vMix</button>
-        </div>
-
-        <div class="output-box" id="output-box">
-            <label style="margin-top: 15px;">URL Gerada para a entrada Web Browser do vMix:</label>
-            <input type="text" class="output-url" id="generated-url" readonly>
+        <!-- LADO DIREITO: PREVIEW -->
+        <div class="preview-container" id="preview-container">
+            <iframe id="preview-iframe" src=""></iframe>
         </div>
     </div>
 
-    <div class="preview-container" id="preview-container">
-        <iframe id="preview-iframe" src=""></iframe>
-    </div>
-
-    <!-- LOGO DO ESTRATÉGIA COM O SEU LINK DO GOOGLE DRIVE -->
+    <!-- LOGO DO ESTRATÉGIA NO RODAPÉ -->
     <div class="footer-logo">
         <img src="https://lh3.googleusercontent.com/d/14liJU9Uk5wsCe1spKmSYV-DytETRkvGS" alt="Estratégia Concursos">
     </div>
