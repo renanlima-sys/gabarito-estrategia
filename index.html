@@ -40,9 +40,9 @@
             padding: 10px 8px; 
             box-sizing: border-box;
             color: black; 
-            /* TRANSIÇÃO SUAVE EM FADE */
+            /* TRANSIÇÃO MAIS SUAVE (1.2 SEGUNDOS) */
             opacity: 1;
-            transition: opacity 0.6s ease-in-out;
+            transition: opacity 1.2s ease-in-out;
         }
 
         .questao-box { 
@@ -157,12 +157,12 @@
             });
         }
 
-        // ROTAÇÃO SUAVE COM TRANSIÇÃO EM FADE
+        // ROTAÇÃO SUAVE COM TRANSIÇÃO LENTA (1.2 SEGUNDOS)
         function rotacionarPaginas() {
             if (gabaritoCompleto.length > limitePorPagina) {
                 const grid = document.getElementById("grid-respostas");
                 
-                // Transição para sumir
+                // Esmaece para sumir
                 grid.style.opacity = "0";
 
                 setTimeout(() => {
@@ -172,9 +172,9 @@
                     }
                     desenharTela();
                     
-                    // Transição para reaparecer
+                    // Reaparece suavemente
                     grid.style.opacity = "1";
-                }, 600);
+                }, 1200); // Aguarda o tempo exato do fade out
             }
         }
 
