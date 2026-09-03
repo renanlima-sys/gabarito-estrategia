@@ -57,7 +57,7 @@
         .header h1 { font-size: 28px; font-weight: 700; color: #ffffff; margin-bottom: 6px; }
         .header p { color: rgba(224, 242, 254, 0.8); font-size: 14px; margin-bottom: 20px; }
 
-        .form-group { margin-bottom: 20px; text-align: left; }
+        .form-group { margin-bottom: 15px; text-align: left; }
         label { display: block; margin-bottom: 8px; font-size: 13px; font-weight: 600; color: rgba(240, 249, 255, 0.9); }
 
         input[type="text"] {
@@ -69,6 +69,24 @@
             color: #fff;
             font-size: 15px;
             outline: none;
+        }
+
+        /* CAIXA DE TÍTULO DO EVENTO */
+        .title-box {
+            display: none;
+            margin-bottom: 20px;
+            text-align: left;
+            background: rgba(56, 189, 248, 0.1);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 12px;
+            padding: 12px 15px;
+        }
+
+        .title-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: #38bdf8;
+            word-break: break-word;
         }
 
         .color-picker-container {
@@ -219,7 +237,7 @@
             }
 
             atualizarUrlFinal();
-            buscarLinkVideosDrive(id);
+            buscarDadosEvento(id);
 
             document.getElementById('color-section').style.display = 'block';
             document.getElementById('output-box').style.display = 'block';
@@ -227,11 +245,21 @@
             document.getElementById('preview-container').style.display = 'block';
         }
 
-        function buscarLinkVideosDrive(id) {
+        function buscarDadosEvento(id) {
             fetch(API_URL + "?evento=" + encodeURIComponent(id))
                 .then(res => res.json())
                 .then(dados => {
                     if (dados.configuracoes) {
+                        // EXIBE O TÍTULO SE EXISTIR
+                        var titulo = dados.configuracoes.titulo || "";
+                        if (titulo && String(titulo).trim() !== "") {
+                            document.getElementById('event-title-text').innerText = titulo;
+                            document.getElementById('title-box').style.display = 'block';
+                        } else {
+                            document.getElementById('title-box').style.display = 'none';
+                        }
+
+                        // EXIBE A PASTA DE VÍDEOS SE EXISTIR
                         var link = dados.configuracoes.link_videos || "";
                         if (link && String(link).trim() !== "") {
                             linkDriveVideos = String(link).trim();
@@ -243,7 +271,7 @@
                         }
                     }
                 })
-                .catch(err => console.error("Erro ao buscar link de vídeos:", err));
+                .catch(err => console.error("Erro ao buscar dados do evento:", err));
         }
 
         function atualizarUrlFinal() {
@@ -298,6 +326,12 @@
             <div class="form-group">
                 <label for="event-id">ID do Agendamento:</label>
                 <input type="text" id="event-id" placeholder="INSERIR O ID DO INTRA AQUI!" autocomplete="off">
+            </div>
+
+            <!-- CAMPO DO TÍTULO DO EVENTO (EXIBIDO APÓS CARREGAR) -->
+            <div class="title-box" id="title-box">
+                <label style="margin-bottom: 4px; color: rgba(224, 242, 254, 0.7);">Evento:</label>
+                <div class="title-value" id="event-title-text"></div>
             </div>
 
             <div class="color-picker-container" id="color-section">
