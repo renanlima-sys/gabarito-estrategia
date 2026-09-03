@@ -12,20 +12,34 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        /* FUNDO DEGRADÊ ESTILO MESH (INSPIRADO NA SUA IMAGEM) */
+        /* FUNDO DEGRADÊ ANIMADO EM CSS PURO */
         body {
             background-color: #03020c;
             background-image: 
                 radial-gradient(circle at 15% 85%, #6a0ba8 0%, transparent 55%),
                 radial-gradient(circle at 45% 35%, #0d1b7a 0%, transparent 60%),
                 radial-gradient(circle at 85% 15%, #05051a 0%, transparent 50%);
-            background-attachment: fixed;
+            background-size: 180% 180%;
+            animation: moverDegrade 15s ease infinite alternate;
             color: #ffffff;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             padding: 40px 20px;
+        }
+
+        /* ANIMAÇÃO DE MOVIMENTO CONTÍNUO */
+        @keyframes moverDegrade {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
         }
 
         .header {
@@ -146,8 +160,8 @@
         /* ÁREA DE PREVIEW */
         .preview-container {
             width: 100%;
-            max-width: 960px; /* Metade de 1920px para caber na tela mantendo proporção 16:9 */
-            height: 540px;   /* Metade de 1080px */
+            max-width: 960px;
+            height: 540px;
             border: 1px solid rgba(124, 77, 255, 0.3);
             border-radius: 16px;
             overflow: hidden;
@@ -161,7 +175,7 @@
             width: 1920px;
             height: 1080px;
             border: none;
-            transform: scale(0.5); /* Escalado para 50% */
+            transform: scale(0.5);
             transform-origin: 0 0;
         }
 
@@ -209,7 +223,6 @@
     <div class="toast" id="toast">Link copiado com sucesso!</div>
 
     <script>
-        // Pega a URL base dinamicamente (onde o projeto está hospedado no GitHub Pages)
         const baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/')) + '/index.html';
 
         function gerarLink() {
@@ -222,12 +235,10 @@
 
             const urlFinal = `${baseUrl}?evento=${encodeURIComponent(id)}`;
 
-            // Exibe os campos de saída e o botão de copiar
             document.getElementById('generated-url').value = urlFinal;
             document.getElementById('output-box').style.display = 'block';
             document.getElementById('btn-copy').style.display = 'block';
 
-            // Carrega a prévia no iframe
             const iframe = document.getElementById('preview-iframe');
             iframe.src = urlFinal;
             document.getElementById('preview-container').style.display = 'block';
@@ -238,7 +249,6 @@
             urlInput.select();
             navigator.clipboard.writeText(urlInput.value);
 
-            // Exibe notificação de confirmação
             const toast = document.getElementById('toast');
             toast.style.display = 'block';
             setTimeout(() => {
@@ -246,7 +256,6 @@
             }, 2500);
         }
 
-        // Permite pressionar Enter para gerar o link
         document.getElementById('event-id').addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
                 gerarLink();
