@@ -71,6 +71,7 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.15);
         }
 
+        /* Oculta apenas o texto quando estiver sem alternativa, mantendo o fundo colorido */
         .letra.vazia { color: transparent !important; }
         .aviso { color: #ffffff; background: rgba(0,0,0,0.8); padding: 15px; border-radius: 8px; font-size: 20px; grid-column: span 4; text-align: center; margin-top: 50px;}
     </style>
@@ -91,7 +92,8 @@
         const corFundoParam = params.get("corFundo");
         const corTextoParam = params.get("corTexto");
         
-        let corFundo = corFundoParam ? decodeURIComponent(corFundoParam) : "#4a2b82";
+        // Pega a cor vinda do gerador ou do fallback automático
+        let corFundo = corFundoParam ? decodeURIComponent(corFundoParam) : "#1d4ed8";
         let corTexto = corTextoParam ? decodeURIComponent(corTextoParam) : "#ffffff";
 
         let gabaritoCompleto = [];
@@ -122,7 +124,7 @@
                             return;
                         }
 
-                        // APLICA A COR AUTOMÁTICA ENVIADA PELA API
+                        // APLICA A COR AUTOMÁTICA ENVIADA PELA API (SE HOUVER)
                         if (dados.configuracoes && dados.configuracoes.cor_fundo) {
                             corFundo = dados.configuracoes.cor_fundo;
                         }
@@ -160,8 +162,8 @@
                 let val = (q.resposta !== undefined && q.resposta !== null) ? String(q.resposta).trim() : "";
                 let classeVazia = val === "" ? "vazia" : "";
 
-                // Força a cor do retângulo (corFundo) e da letra (corTexto) vindas da URL
-                let estiloPersonalizado = classeVazia ? "" : 'style="background-color: ' + corFundo + ' !important; color: ' + corTexto + ' !important;"';
+                // ALTERAÇÃO AQUI: Força sempre o background-color, esteja vazia ou não!
+                let estiloPersonalizado = 'style="background-color: ' + corFundo + ' !important; color: ' + corTexto + ' !important;"';
 
                 box.innerHTML = 
                     '<div class="numero">' + q.numero + '</div>' +
