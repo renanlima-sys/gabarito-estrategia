@@ -63,7 +63,6 @@
             height: 39px; 
             font-size: 25px; 
             font-weight: 800; 
-            background-color: #4a2b82; 
             color: #ffffff; 
             border-radius: 8px; 
             display: flex; 
@@ -157,9 +156,12 @@
                 let val = (q.resposta !== undefined && q.resposta !== null) ? String(q.resposta).trim() : "";
                 let classeVazia = val === "" ? "vazia" : "";
 
+                // Força a cor do retângulo (corFundo) e da letra (corTexto) vindas da URL
+                let estiloPersonalizado = classeVazia ? "" : 'style="background-color: ' + corFundo + ' !important; color: ' + corTexto + ' !important;"';
+
                 box.innerHTML = 
                     '<div class="numero">' + q.numero + '</div>' +
-                    '<div class="letra ' + classeVazia + '" style="background-color: ' + corFundo + '; color: ' + corTexto + ';">' + val + '</div>';
+                    '<div class="letra ' + classeVazia + '" ' + estiloPersonalizado + '>' + val + '</div>';
                 
                 grid.appendChild(box);
             });
