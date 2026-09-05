@@ -71,7 +71,7 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.15);
         }
 
-        /* Oculta apenas o texto quando estiver sem alternativa, mantendo o fundo colorido */
+        /* Oculta apenas a letra quando a resposta estiver em branco, mantendo o fundo colorido */
         .letra.vazia { color: transparent !important; }
         .aviso { color: #ffffff; background: rgba(0,0,0,0.8); padding: 15px; border-radius: 8px; font-size: 20px; grid-column: span 4; text-align: center; margin-top: 50px;}
     </style>
@@ -92,8 +92,10 @@
         const corFundoParam = params.get("corFundo");
         const corTextoParam = params.get("corTexto");
         
-        // Dá prioridade total à cor vinda da URL do gerador
-        let corFundo = corFundoParam ? decodeURIComponent(corFundoParam) : "#1d4ed8";
+        // Se houver alteração manual consciente na URL (diferente do roxo antigo), prioriza a escolha do usuário
+        const corManualInformada = (corFundoParam && corFundoParam !== "%234a2b82" && corFundoParam !== "#4a2b82");
+
+        let corFundo = corManualInformada ? decodeURIComponent(corFundoParam) : "#1d4ed8";
         let corTexto = corTextoParam ? decodeURIComponent(corTextoParam) : "#ffffff";
 
         let gabaritoCompleto = [];
@@ -104,6 +106,56 @@
             if (!url) return "";
             var match = url.match(/[-\w]{25,}/);
             return match ? 'https://lh3.googleusercontent.com/d/' + match[0] : url;
+        }
+
+        // FUNÇÃO QUE ANALISA A IMAGEM DA ARTE E EXTRAI A COR PREDOMINANTE
+        function extrairCorDaArte(urlImagem, callback) {
+            if (corManualInformada) return; // Se o usuário escolheu uma cor no gerador, ignora a extração automática
+
+            var img = new Image();
+            img.crossOrigin = "Anonymous";
+            img.src = urlImagem;
+
+            img.onload = function() {
+                try {
+                    var canvas = document.createElement("canvas");
+                    var ctx = canvas.getContext("2d");
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.drawImage(img, 0, 0);
+
+                    // Amostra a área do lado esquerdo da imagem (onde ficam as caixas de respostas)
+                    var imageData = ctx.getImageData(0, 0, Math.floor(img.width * 0.35), img.height).data;
+                    
+                    var rSum = 0, gSum = 0, bSum = 0, count = 0;
+                    for (var i = 0; i < imageData.length; i += 16) {
+                        var r = imageData[i];
+                        var g = imageData[i+1];
+                        var b = imageData[i+2];
+
+                        // Descarta cores extremamente claras ou escuras para evitar tons opacos
+                        var brilho = (r + g + b) / 3;
+                        if (brilho > 30 && brilho < 225) {
+                            rSum += r;
+                            gSum += g;
+                            bSum += b;
+                            count++;
+                        }
+                    }
+
+                    if (count > 0) {
+                        var avgR = Math.floor(rSum / count);
+                        var avgG = Math.floor(gSum / count);
+                        var avgB = Math.floor(bSum / count);
+
+                        // Converte RGB em Hexadecimal
+                        var hex = "#" + ((1 << 24) + (avgR << 16) + (avgG << 8) + avgB).toString(16).slice(1);
+                        callback(hex);
+                    }
+                } catch(e) {
+                    console.warn("Não foi possível extrair a cor da imagem por restrição CORS, mantendo cor base.", e);
+                }
+            };
         }
 
         function carregarDados() {
@@ -124,14 +176,15 @@
                             return;
                         }
 
-                        // SÓ USA A COR DA API SE O GERADOR NÃO TIVER ENVIADO UMA COR PELA URL
-                        if (!corFundoParam && dados.configuracoes && dados.configuracoes.cor_fundo) {
-                            corFundo = dados.configuracoes.cor_fundo;
-                        }
-
                         if (dados.configuracoes && dados.configuracoes.arte_fundo) {
                             var linkImg = converterLinkDrive(dados.configuracoes.arte_fundo);
                             document.getElementById("fundo-arte").style.backgroundImage = "url('" + linkImg + "')";
+                            
+                            // Analisa a imagem E3 e calcula a cor perfeita automaticamente
+                            extrairCorDaArte(linkImg, function(corDetectada) {
+                                corFundo = corDetectada;
+                                desenharTela();
+                            });
                         } else {
                             document.getElementById("fundo-arte").style.backgroundImage = "none";
                         }
@@ -162,7 +215,7 @@
                 let val = (q.resposta !== undefined && q.resposta !== null) ? String(q.resposta).trim() : "";
                 let classeVazia = val === "" ? "vazia" : "";
 
-                // Força a aplicação da cor selecionada em todas as caixas
+                // Aplica a cor extraída automaticamente da imagem
                 let estiloPersonalizado = 'style="background-color: ' + corFundo + ' !important; color: ' + corTexto + ' !important;"';
 
                 box.innerHTML = 
