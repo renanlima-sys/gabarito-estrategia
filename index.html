@@ -113,7 +113,6 @@
             var delayAleatorio = Math.floor(Math.random() * 2000);
 
             setTimeout(function() {
-                // BUSCA DADOS ESPECÍFICOS DO ID COM ANTI-CACHE
                 fetch(API_URL + "?evento=" + encodeURIComponent(eventoID) + "&nocache=" + new Date().getTime())
                     .then(function(res) { return res.json(); })
                     .then(function(dados) {
@@ -121,6 +120,11 @@
                             document.getElementById("status-msg").innerText = dados.erro;
                             document.getElementById("fundo-arte").style.backgroundImage = "none";
                             return;
+                        }
+
+                        // APLICA A COR AUTOMÁTICA ENVIADA PELA API
+                        if (dados.configuracoes && dados.configuracoes.cor_fundo) {
+                            corFundo = dados.configuracoes.cor_fundo;
                         }
 
                         if (dados.configuracoes && dados.configuracoes.arte_fundo) {
