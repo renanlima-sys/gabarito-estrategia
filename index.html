@@ -92,7 +92,7 @@
         const corFundoParam = params.get("corFundo");
         const corTextoParam = params.get("corTexto");
         
-        // Pega a cor vinda do gerador ou do fallback automático
+        // Dá prioridade total à cor vinda da URL do gerador
         let corFundo = corFundoParam ? decodeURIComponent(corFundoParam) : "#1d4ed8";
         let corTexto = corTextoParam ? decodeURIComponent(corTextoParam) : "#ffffff";
 
@@ -124,8 +124,8 @@
                             return;
                         }
 
-                        // APLICA A COR AUTOMÁTICA ENVIADA PELA API (SE HOUVER)
-                        if (dados.configuracoes && dados.configuracoes.cor_fundo) {
+                        // SÓ USA A COR DA API SE O GERADOR NÃO TIVER ENVIADO UMA COR PELA URL
+                        if (!corFundoParam && dados.configuracoes && dados.configuracoes.cor_fundo) {
                             corFundo = dados.configuracoes.cor_fundo;
                         }
 
@@ -162,7 +162,7 @@
                 let val = (q.resposta !== undefined && q.resposta !== null) ? String(q.resposta).trim() : "";
                 let classeVazia = val === "" ? "vazia" : "";
 
-                // ALTERAÇÃO AQUI: Força sempre o background-color, esteja vazia ou não!
+                // Força a aplicação da cor selecionada em todas as caixas
                 let estiloPersonalizado = 'style="background-color: ' + corFundo + ' !important; color: ' + corTexto + ' !important;"';
 
                 box.innerHTML = 
