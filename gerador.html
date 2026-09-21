@@ -19,49 +19,61 @@
 
         .container { 
             display: flex; 
-            gap: 30px; 
+            gap: 25px; 
             background: #1e3e62; 
-            padding: 30px; 
+            padding: 25px; 
             border-radius: 16px; 
             box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
-            max-width: 1400px; 
             width: 100%;
+            max-width: 1350px;
         }
 
-        .form-section { flex: 1; max-width: 450px; }
-        .preview-section { flex: 2; display: flex; flex-direction: column; align-items: center; }
+        .form-section { 
+            width: 360px; 
+            min-width: 360px; 
+            display: flex;
+            flex-direction: column;
+        }
 
-        h1 { font-size: 24px; margin-bottom: 5px; color: #fff; text-align: center; }
-        p.subtitle { font-size: 14px; color: #94a3b8; margin-bottom: 25px; text-align: center; }
+        .preview-section { 
+            flex: 1; 
+            display: flex; 
+            align-items: flex-start; 
+            justify-content: center; 
+            overflow: hidden;
+        }
 
-        .input-group { margin-bottom: 18px; }
-        label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: #cbd5e1; }
+        h1 { font-size: 22px; margin-bottom: 4px; color: #fff; text-align: center; }
+        p.subtitle { font-size: 13px; color: #94a3b8; margin-bottom: 20px; text-align: center; }
+
+        .input-group { margin-bottom: 15px; }
+        label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 5px; color: #cbd5e1; }
         
-        input[type="text"], select { 
+        input[type="text"] { 
             width: 100%; 
-            padding: 12px; 
-            border-radius: 8px; 
+            padding: 10px; 
+            border-radius: 6px; 
             border: 1px solid #334155; 
             background: #0f172a; 
             color: #fff; 
-            font-size: 14px; 
+            font-size: 13px; 
             outline: none;
         }
 
-        .color-pickers { display: flex; gap: 15px; margin-bottom: 20px; }
+        .color-pickers { display: flex; gap: 10px; margin-bottom: 15px; }
         .color-item { flex: 1; }
-        input[type="color"] { width: 100%; height: 40px; border: none; border-radius: 6px; cursor: pointer; background: transparent; }
+        input[type="color"] { width: 100%; height: 38px; border: none; border-radius: 6px; cursor: pointer; background: transparent; }
 
         .btn { 
             width: 100%; 
-            padding: 12px; 
+            padding: 11px; 
             border: none; 
             border-radius: 8px; 
             font-weight: 700; 
-            font-size: 15px; 
+            font-size: 14px; 
             cursor: pointer; 
             transition: all 0.2s; 
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .btn-primary { background: #2563eb; color: #fff; }
@@ -70,21 +82,33 @@
         .btn-success { background: #10b981; color: #fff; }
         .btn-success:hover { background: #059669; }
 
+        /* CONTAINER DO PREVIEW AJUSTADO PARA NÃO ESTOURAR A TELA */
         .preview-frame { 
-            width: 100%; 
-            height: 520px; 
+            width: 864px; 
+            height: 486px; 
             border: 2px solid #334155; 
             border-radius: 12px; 
             background: #000; 
+            position: relative;
             overflow: hidden;
         }
 
-        iframe { width: 1920px; height: 1080px; border: none; transform: scale(0.48); transform-origin: 0 0; }
+        /* SCALE PROPORCIONAL PARA REDUZIR A TELA DE 1920x1080 PARA O TAMANHO DO CONTAINER */
+        iframe { 
+            width: 1920px; 
+            height: 1080px; 
+            border: none; 
+            transform: scale(0.45); 
+            transform-origin: 0 0; 
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
         
         .drive-box-style {
-            margin-top: 15px; 
+            margin-bottom: 12px; 
             background: rgba(15, 23, 42, 0.6); 
-            padding: 12px; 
+            padding: 10px; 
             border-radius: 8px; 
             border: 1px solid #334155;
         }
@@ -93,8 +117,8 @@
             flex: 1; 
             text-align: center; 
             text-decoration: none; 
-            padding: 8px; 
-            font-size: 13px; 
+            padding: 7px; 
+            font-size: 12px; 
             border-radius: 6px;
             font-weight: bold;
             color: #ffffff;
@@ -106,6 +130,7 @@
 <body>
 
     <div class="container">
+        <!-- COLUNA ESQUERDA: FORMULÁRIO -->
         <div class="form-section">
             <h1>Gabaritos Estratégia</h1>
             <p class="subtitle">Gerador de overlays em tempo real</p>
@@ -115,9 +140,9 @@
                 <input type="text" id="event-id" placeholder="Ex: 176039" oninput="carregarEvento()">
             </div>
 
-            <div class="input-group" id="event-info" style="display: none; background: #0f172a; padding: 12px; border-radius: 8px; border-left: 4px solid #2563eb;">
+            <div class="input-group" id="event-info" style="display: none; background: #0f172a; padding: 10px; border-radius: 8px; border-left: 4px solid #2563eb;">
                 <label style="margin:0;">Evento:</label>
-                <span id="event-title-text" style="font-size: 14px; font-weight: bold; color: #38bdf8;">-</span>
+                <span id="event-title-text" style="font-size: 13px; font-weight: bold; color: #38bdf8;">-</span>
             </div>
 
             <div class="color-pickers">
@@ -131,37 +156,38 @@
                 </div>
             </div>
 
-            <!-- BLOCO PASTA DE VÍDEOS/MÍDIAS (E4) -->
+            <!-- PASTA DE VÍDEOS / MÍDIAS (E4) -->
             <div id="drive-box" class="drive-box-style" style="display: none;">
-                <label style="font-size: 12px; font-weight: bold; color: #cbd5e1;">Pasta de Vídeos / Mídias do Evento:</label>
-                <input type="text" id="drive-url-display" readonly style="width: 100%; margin-top: 5px; padding: 8px; font-size: 12px;">
-                <div style="display: flex; gap: 10px; margin-top: 8px;">
+                <label style="font-size: 11px; font-weight: bold; color: #cbd5e1;">Pasta de Vídeos / Mídias do Evento:</label>
+                <input type="text" id="drive-url-display" readonly style="width: 100%; margin-top: 4px; padding: 6px; font-size: 11px;">
+                <div style="display: flex; gap: 8px; margin-top: 6px;">
                     <a id="btn-open-drive" href="#" target="_blank" class="drive-btn" style="background: #2563eb;">📁 Abrir Pasta</a>
                     <button onclick="copiarLinkDrive()" class="drive-btn" style="background: #475569;">📋 Copiar Link</button>
                 </div>
             </div>
 
-            <!-- BLOCO PASTA DE ARTES DO EVENTO (E5) -->
+            <!-- PASTA DE ARTES DO EVENTO (E5) -->
             <div id="artes-box" class="drive-box-style" style="display: none;">
-                <label style="font-size: 12px; font-weight: bold; color: #cbd5e1;">Pasta de Artes do Evento:</label>
-                <input type="text" id="artes-url-display" readonly style="width: 100%; margin-top: 5px; padding: 8px; font-size: 12px;">
-                <div style="display: flex; gap: 10px; margin-top: 8px;">
+                <label style="font-size: 11px; font-weight: bold; color: #cbd5e1;">Pasta de Artes do Evento:</label>
+                <input type="text" id="artes-url-display" readonly style="width: 100%; margin-top: 4px; padding: 6px; font-size: 11px;">
+                <div style="display: flex; gap: 8px; margin-top: 6px;">
                     <a id="btn-open-artes" href="#" target="_blank" class="drive-btn" style="background: #0284c7;">🎨 Abrir Pasta Artes</a>
                     <button onclick="copiarLinkArtes()" class="drive-btn" style="background: #475569;">📋 Copiar Link</button>
                 </div>
             </div>
 
-            <div style="margin-top: 20px;">
+            <div style="margin-top: 10px;">
                 <button class="btn btn-primary" onclick="carregarPreview()">Carregar & Pré-visualizar</button>
                 <button class="btn btn-success" onclick="copiarLinkVMix()">Copiar Link do vMix</button>
             </div>
 
-            <div class="input-group" style="margin-top: 15px;">
+            <div class="input-group" style="margin-top: 10px;">
                 <label>URL Gerada para a entrada Web Browser do vMix:</label>
                 <input type="text" id="final-url" readonly style="font-size: 11px; color: #94a3b8;">
             </div>
         </div>
 
+        <!-- COLUNA DIREITA: PREVIEW DO VMIX -->
         <div class="preview-section">
             <div class="preview-frame">
                 <iframe id="preview-iframe" src="about:blank"></iframe>
