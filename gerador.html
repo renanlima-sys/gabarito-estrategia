@@ -19,18 +19,18 @@
 
         .container { 
             display: flex; 
-            gap: 25px; 
+            gap: 20px; 
             background: #1e3e62; 
             padding: 25px; 
             border-radius: 16px; 
             box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
             width: 100%;
-            max-width: 1350px;
+            max-width: 1280px;
         }
 
         .form-section { 
-            width: 360px; 
-            min-width: 360px; 
+            width: 340px; 
+            min-width: 340px; 
             display: flex;
             flex-direction: column;
         }
@@ -38,9 +38,8 @@
         .preview-section { 
             flex: 1; 
             display: flex; 
-            align-items: flex-start; 
             justify-content: center; 
-            overflow: hidden;
+            align-items: flex-start;
         }
 
         h1 { font-size: 22px; margin-bottom: 4px; color: #fff; text-align: center; }
@@ -82,27 +81,23 @@
         .btn-success { background: #10b981; color: #fff; }
         .btn-success:hover { background: #059669; }
 
-        /* CONTAINER DO PREVIEW AJUSTADO PARA NÃO ESTOURAR A TELA */
-        .preview-frame { 
-            width: 864px; 
-            height: 486px; 
-            border: 2px solid #334155; 
-            border-radius: 12px; 
-            background: #000; 
-            position: relative;
+        /* CONTAINER COM ESCALA PROPORCIONAL PARA A TELA DE PREVIEW */
+        .preview-wrapper {
+            width: 800px;
+            height: 450px;
+            border: 2px solid #334155;
+            border-radius: 12px;
+            background: #000;
             overflow: hidden;
+            position: relative;
         }
 
-        /* SCALE PROPORCIONAL PARA REDUZIR A TELA DE 1920x1080 PARA O TAMANHO DO CONTAINER */
         iframe { 
             width: 1920px; 
             height: 1080px; 
             border: none; 
-            transform: scale(0.45); 
-            transform-origin: 0 0; 
-            position: absolute;
-            top: 0;
-            left: 0;
+            transform: scale(0.416666); 
+            transform-origin: top left;
         }
         
         .drive-box-style {
@@ -130,7 +125,7 @@
 <body>
 
     <div class="container">
-        <!-- COLUNA ESQUERDA: FORMULÁRIO -->
+        <!-- FORMULÁRIO -->
         <div class="form-section">
             <h1>Gabaritos Estratégia</h1>
             <p class="subtitle">Gerador de overlays em tempo real</p>
@@ -156,7 +151,7 @@
                 </div>
             </div>
 
-            <!-- PASTA DE VÍDEOS / MÍDIAS (E4) -->
+            <!-- PASTA DE VÍDEOS -->
             <div id="drive-box" class="drive-box-style" style="display: none;">
                 <label style="font-size: 11px; font-weight: bold; color: #cbd5e1;">Pasta de Vídeos / Mídias do Evento:</label>
                 <input type="text" id="drive-url-display" readonly style="width: 100%; margin-top: 4px; padding: 6px; font-size: 11px;">
@@ -166,7 +161,7 @@
                 </div>
             </div>
 
-            <!-- PASTA DE ARTES DO EVENTO (E5) -->
+            <!-- PASTA DE ARTES -->
             <div id="artes-box" class="drive-box-style" style="display: none;">
                 <label style="font-size: 11px; font-weight: bold; color: #cbd5e1;">Pasta de Artes do Evento:</label>
                 <input type="text" id="artes-url-display" readonly style="width: 100%; margin-top: 4px; padding: 6px; font-size: 11px;">
@@ -182,14 +177,14 @@
             </div>
 
             <div class="input-group" style="margin-top: 10px;">
-                <label>URL Gerada para a entrada Web Browser do vMix:</label>
+                <label>URL Gerada para o vMix:</label>
                 <input type="text" id="final-url" readonly style="font-size: 11px; color: #94a3b8;">
             </div>
         </div>
 
-        <!-- COLUNA DIREITA: PREVIEW DO VMIX -->
+        <!-- PRÉ-VISUALIZAÇÃO -->
         <div class="preview-section">
-            <div class="preview-frame">
+            <div class="preview-wrapper">
                 <iframe id="preview-iframe" src="about:blank"></iframe>
             </div>
         </div>
@@ -228,7 +223,6 @@
                             var titulo = dados.configuracoes.titulo || "";
                             document.getElementById('event-title-text').innerText = (titulo && String(titulo).trim() !== "") ? titulo : "Evento #" + id;
 
-                            // Vídeos (E4)
                             var linkVid = dados.configuracoes.link_videos || "";
                             if (linkVid && String(linkVid).trim() !== "") {
                                 linkDriveVideos = String(linkVid).trim();
@@ -239,7 +233,6 @@
                                 document.getElementById('drive-box').style.display = 'none';
                             }
 
-                            // Artes (E5)
                             var linkArt = dados.configuracoes.link_artes || "";
                             if (linkArt && String(linkArt).trim() !== "") {
                                 linkDriveArtes = String(linkArt).trim();
@@ -282,14 +275,14 @@
         function copiarLinkDrive() {
             if (linkDriveVideos) {
                 navigator.clipboard.writeText(linkDriveVideos);
-                alert("Link da pasta de vídeos copiado com sucesso!");
+                alert("Link da pasta de vídeos copiado!");
             }
         }
 
         function copiarLinkArtes() {
             if (linkDriveArtes) {
                 navigator.clipboard.writeText(linkDriveArtes);
-                alert("Link da pasta de artes copiado com sucesso!");
+                alert("Link da pasta de artes copiado!");
             }
         }
     </script>
