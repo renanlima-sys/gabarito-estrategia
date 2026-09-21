@@ -3,288 +3,430 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerador - Gabaritos Estratégia</title>
+    <title>Gerador de Overlay | Estratégia Concursos</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { 
-            background: #0b192c; 
-            color: #ffffff; 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            min-height: 100vh; 
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+        body {
+            background-color: #020617;
+            background-image: 
+                radial-gradient(circle at 20% 80%, #0369a1 0%, transparent 50%),
+                radial-gradient(circle at 50% 20%, #1d4ed8 0%, transparent 55%),
+                radial-gradient(circle at 80% 80%, #0f172a 0%, transparent 50%);
+            background-size: 160% 160%;
+            animation: moverDegrade 12s ease infinite alternate;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             padding: 20px;
         }
 
-        .container { 
-            display: flex; 
-            gap: 20px; 
-            background: #1e3e62; 
-            padding: 25px; 
-            border-radius: 16px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
-            width: 100%;
-            max-width: 1280px;
+        @keyframes moverDegrade {
+            0% { background-position: 0% 30%; }
+            50% { background-position: 100% 70%; }
+            100% { background-position: 0% 30%; }
         }
 
-        .form-section { 
-            width: 340px; 
-            min-width: 340px; 
+        .main-container {
             display: flex;
-            flex-direction: column;
-        }
-
-        .preview-section { 
-            flex: 1; 
-            display: flex; 
-            justify-content: center; 
+            flex-direction: row;
             align-items: flex-start;
+            justify-content: center;
+            gap: 30px;
+            width: 100%;
+            max-width: 1400px;
+            margin-bottom: 20px;
         }
 
-        h1 { font-size: 22px; margin-bottom: 4px; color: #fff; text-align: center; }
-        p.subtitle { font-size: 13px; color: #94a3b8; margin-bottom: 20px; text-align: center; }
+        .card-control {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            border-radius: 24px;
+            padding: 35px 30px;
+            width: 450px;
+            flex-shrink: 0;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+            text-align: center;
+        }
 
-        .input-group { margin-bottom: 15px; }
-        label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 5px; color: #cbd5e1; }
-        
-        input[type="text"] { 
-            width: 100%; 
-            padding: 10px; 
-            border-radius: 6px; 
-            border: 1px solid #334155; 
-            background: #0f172a; 
-            color: #fff; 
-            font-size: 13px; 
+        .header h1 { font-size: 28px; font-weight: 700; color: #ffffff; margin-bottom: 6px; }
+        .header p { color: rgba(224, 242, 254, 0.8); font-size: 14px; margin-bottom: 20px; }
+
+        .form-group { margin-bottom: 12px; text-align: left; }
+        label { display: block; margin-bottom: 8px; font-size: 13px; font-weight: 600; color: rgba(240, 249, 255, 0.9); }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: 1px solid rgba(56, 189, 248, 0.25);
+            background-color: rgba(2, 6, 23, 0.6);
+            color: #fff;
+            font-size: 15px;
             outline: none;
         }
 
-        .color-pickers { display: flex; gap: 10px; margin-bottom: 15px; }
-        .color-item { flex: 1; }
-        input[type="color"] { width: 100%; height: 38px; border: none; border-radius: 6px; cursor: pointer; background: transparent; }
-
-        .btn { 
-            width: 100%; 
-            padding: 11px; 
-            border: none; 
-            border-radius: 8px; 
-            font-weight: 700; 
-            font-size: 14px; 
-            cursor: pointer; 
-            transition: all 0.2s; 
-            margin-bottom: 8px;
+        /* CAIXA DO TÍTULO DO EVENTO (FIXA ABAIXO DO ID) */
+        .title-box {
+            display: none;
+            margin-bottom: 20px;
+            text-align: left;
+            background: rgba(56, 189, 248, 0.08);
+            border: 1px solid rgba(56, 189, 248, 0.25);
+            border-radius: 12px;
+            padding: 12px 15px;
         }
 
-        .btn-primary { background: #2563eb; color: #fff; }
-        .btn-primary:hover { background: #1d4ed8; }
+        .title-value {
+            font-size: 15px;
+            font-weight: 700;
+            color: #38bdf8;
+            word-break: break-word;
+        }
 
-        .btn-success { background: #10b981; color: #fff; }
-        .btn-success:hover { background: #059669; }
+        .color-picker-container {
+            display: none;
+            margin-top: 15px;
+            text-align: left;
+            background: rgba(2, 6, 23, 0.4);
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid rgba(56, 189, 248, 0.15);
+        }
 
-        /* CONTAINER COM ESCALA PROPORCIONAL PARA A TELA DE PREVIEW */
-        .preview-wrapper {
+        .custom-color-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .custom-color-row:last-child { margin-bottom: 0; }
+
+        input[type="color"] {
+            border: none;
+            width: 42px;
+            height: 42px;
+            border-radius: 8px;
+            cursor: pointer;
+            background: none;
+        }
+
+        .drive-box {
+            display: none;
+            margin-top: 14px;
+            text-align: left;
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 12px;
+            padding: 15px;
+        }
+
+        .drive-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .btn-drive-open {
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: bold;
+            flex: 1;
+            text-align: center;
+        }
+
+        .btn-artes-open {
+            background: #0284c7;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: bold;
+            flex: 1;
+            text-align: center;
+        }
+
+        .btn-drive-copy {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: bold;
+            flex: 1;
+            cursor: pointer;
+        }
+
+        .btn-drive-open:hover { background: #1d4ed8; }
+        .btn-artes-open:hover { background: #0369a1; }
+        .btn-drive-copy:hover { background: rgba(255, 255, 255, 0.2); }
+
+        .actions { display: flex; flex-direction: column; gap: 12px; margin-top: 15px; }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .btn-generate { background: linear-gradient(135deg, #0284c7 0%, #1d4ed8 100%); color: white; }
+        .btn-copy { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; display: none; }
+
+        .output-box { margin-top: 18px; display: none; text-align: left; }
+        .output-url {
+            width: 100%;
+            padding: 12px;
+            background: rgba(2, 6, 23, 0.8);
+            border: 1px dashed rgba(56, 189, 248, 0.5);
+            border-radius: 8px;
+            color: #34d399;
+            font-family: monospace;
+            font-size: 12px;
+            word-break: break-all;
+        }
+
+        .preview-container {
             width: 800px;
             height: 450px;
-            border: 2px solid #334155;
-            border-radius: 12px;
-            background: #000;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 20px;
             overflow: hidden;
-            position: relative;
+            background-color: #000;
+            display: none;
+            flex-shrink: 0;
         }
 
-        iframe { 
-            width: 1920px; 
-            height: 1080px; 
-            border: none; 
-            transform: scale(0.416666); 
-            transform-origin: top left;
-        }
-        
-        .drive-box-style {
-            margin-bottom: 12px; 
-            background: rgba(15, 23, 42, 0.6); 
-            padding: 10px; 
-            border-radius: 8px; 
-            border: 1px solid #334155;
-        }
-
-        .drive-btn {
-            flex: 1; 
-            text-align: center; 
-            text-decoration: none; 
-            padding: 7px; 
-            font-size: 12px; 
-            border-radius: 6px;
-            font-weight: bold;
-            color: #ffffff;
-            cursor: pointer;
+        iframe {
+            width: 1920px;
+            height: 1080px;
             border: none;
+            transform: scale(0.4166);
+            transform-origin: 0 0;
+        }
+
+        .footer-logo img { max-width: 160px; height: auto; opacity: 0.85; }
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            background-color: #10b981;
+            color: #ffffff;
+            padding: 12px 28px;
+            border-radius: 30px;
+            font-weight: bold;
+            display: none;
+            z-index: 100;
         }
     </style>
-</head>
-<body>
-
-    <div class="container">
-        <!-- FORMULÁRIO -->
-        <div class="form-section">
-            <h1>Gabaritos Estratégia</h1>
-            <p class="subtitle">Gerador de overlays em tempo real</p>
-
-            <div class="input-group">
-                <label for="event-id">ID do Agendamento:</label>
-                <input type="text" id="event-id" placeholder="Ex: 176039" oninput="carregarEvento()">
-            </div>
-
-            <div class="input-group" id="event-info" style="display: none; background: #0f172a; padding: 10px; border-radius: 8px; border-left: 4px solid #2563eb;">
-                <label style="margin:0;">Evento:</label>
-                <span id="event-title-text" style="font-size: 13px; font-weight: bold; color: #38bdf8;">-</span>
-            </div>
-
-            <div class="color-pickers">
-                <div class="color-item">
-                    <label>Cor do Retângulo:</label>
-                    <input type="color" id="color-bg" value="#4a2b82" onchange="atualizarUrlFinal()">
-                </div>
-                <div class="color-item">
-                    <label>Cor da Letra:</label>
-                    <input type="color" id="color-text" value="#ffffff" onchange="atualizarUrlFinal()">
-                </div>
-            </div>
-
-            <!-- PASTA DE VÍDEOS -->
-            <div id="drive-box" class="drive-box-style" style="display: none;">
-                <label style="font-size: 11px; font-weight: bold; color: #cbd5e1;">Pasta de Vídeos / Mídias do Evento:</label>
-                <input type="text" id="drive-url-display" readonly style="width: 100%; margin-top: 4px; padding: 6px; font-size: 11px;">
-                <div style="display: flex; gap: 8px; margin-top: 6px;">
-                    <a id="btn-open-drive" href="#" target="_blank" class="drive-btn" style="background: #2563eb;">📁 Abrir Pasta</a>
-                    <button onclick="copiarLinkDrive()" class="drive-btn" style="background: #475569;">📋 Copiar Link</button>
-                </div>
-            </div>
-
-            <!-- PASTA DE ARTES -->
-            <div id="artes-box" class="drive-box-style" style="display: none;">
-                <label style="font-size: 11px; font-weight: bold; color: #cbd5e1;">Pasta de Artes do Evento:</label>
-                <input type="text" id="artes-url-display" readonly style="width: 100%; margin-top: 4px; padding: 6px; font-size: 11px;">
-                <div style="display: flex; gap: 8px; margin-top: 6px;">
-                    <a id="btn-open-artes" href="#" target="_blank" class="drive-btn" style="background: #0284c7;">🎨 Abrir Pasta Artes</a>
-                    <button onclick="copiarLinkArtes()" class="drive-btn" style="background: #475569;">📋 Copiar Link</button>
-                </div>
-            </div>
-
-            <div style="margin-top: 10px;">
-                <button class="btn btn-primary" onclick="carregarPreview()">Carregar & Pré-visualizar</button>
-                <button class="btn btn-success" onclick="copiarLinkVMix()">Copiar Link do vMix</button>
-            </div>
-
-            <div class="input-group" style="margin-top: 10px;">
-                <label>URL Gerada para o vMix:</label>
-                <input type="text" id="final-url" readonly style="font-size: 11px; color: #94a3b8;">
-            </div>
-        </div>
-
-        <!-- PRÉ-VISUALIZAÇÃO -->
-        <div class="preview-section">
-            <div class="preview-wrapper">
-                <iframe id="preview-iframe" src="about:blank"></iframe>
-            </div>
-        </div>
-    </div>
-
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbzZCCQoeVY2cRJSIlcHZCMY0LPUaH-MFhcwWp4yLgWt5NNpNm6_aZpY11gHGN9z9hPfWA/exec";
-        const BASE_INDEX_URL = "https://renanlima-sys.github.io/gabarito-estrategia/index.html"; 
-
         let linkDriveVideos = "";
         let linkDriveArtes = "";
 
-        function atualizarUrlFinal() {
-            var id = document.getElementById('event-id').value.trim();
-            var bg = encodeURIComponent(document.getElementById('color-bg').value);
-            var text = encodeURIComponent(document.getElementById('color-text').value);
+        function gerarLink() {
+            var input = document.getElementById('event-id');
+            var id = input ? input.value.trim() : '';
 
-            if (id) {
-                var url = BASE_INDEX_URL + "?evento=" + encodeURIComponent(id) + "&corFundo=" + bg + "&corTexto=" + text;
-                document.getElementById('final-url').value = url;
-            } else {
-                document.getElementById('final-url').value = "";
+            if (!id) {
+                alert('Por favor, digite o ID do evento!');
+                return;
             }
+
+            document.getElementById('title-box').style.display = 'block';
+            document.getElementById('event-title-text').innerText = "Buscando dados da planilha...";
+
+            atualizarUrlFinal();
+            buscarDadosEvento(id);
+
+            document.getElementById('color-section').style.display = 'block';
+            document.getElementById('output-box').style.display = 'block';
+            document.getElementById('btn-copy').style.display = 'block';
+            document.getElementById('preview-container').style.display = 'block';
         }
 
-        function carregarEvento() {
-            var id = document.getElementById('event-id').value.trim();
-            atualizarUrlFinal();
+        function buscarDadosEvento(id) {
+            fetch(API_URL + "?evento=" + encodeURIComponent(id))
+                .then(res => res.json())
+                .then(dados => {
+                    if (dados.configuracoes) {
+                        var titulo = dados.configuracoes.titulo || "";
+                        document.getElementById('event-title-text').innerText = (titulo && String(titulo).trim() !== "") ? titulo : "Evento #" + id;
 
-            if (id.length >= 3) {
-                fetch(API_URL + "?evento=" + encodeURIComponent(id))
-                    .then(res => res.json())
-                    .then(dados => {
-                        if (dados.configuracoes) {
-                            document.getElementById('event-info').style.display = 'block';
-                            var titulo = dados.configuracoes.titulo || "";
-                            document.getElementById('event-title-text').innerText = (titulo && String(titulo).trim() !== "") ? titulo : "Evento #" + id;
-
-                            var linkVid = dados.configuracoes.link_videos || "";
-                            if (linkVid && String(linkVid).trim() !== "") {
-                                linkDriveVideos = String(linkVid).trim();
-                                document.getElementById('drive-url-display').value = linkDriveVideos;
-                                document.getElementById('btn-open-drive').href = linkDriveVideos;
-                                document.getElementById('drive-box').style.display = 'block';
-                            } else {
-                                document.getElementById('drive-box').style.display = 'none';
-                            }
-
-                            var linkArt = dados.configuracoes.link_artes || "";
-                            if (linkArt && String(linkArt).trim() !== "") {
-                                linkDriveArtes = String(linkArt).trim();
-                                document.getElementById('artes-url-display').value = linkDriveArtes;
-                                document.getElementById('btn-open-artes').href = linkDriveArtes;
-                                document.getElementById('artes-box').style.display = 'block';
-                            } else {
-                                document.getElementById('artes-box').style.display = 'none';
-                            }
+                        // LINK PASTA DE VÍDEOS (E4)
+                        var linkVid = dados.configuracoes.link_videos || "";
+                        if (linkVid && String(linkVid).trim() !== "") {
+                            linkDriveVideos = String(linkVid).trim();
+                            document.getElementById('drive-url-display').value = linkDriveVideos;
+                            document.getElementById('btn-open-drive').href = linkDriveVideos;
+                            document.getElementById('drive-box').style.display = 'block';
+                        } else {
+                            document.getElementById('drive-box').style.display = 'none';
                         }
-                    });
-            } else {
-                document.getElementById('event-info').style.display = 'none';
-                document.getElementById('drive-box').style.display = 'none';
-                document.getElementById('artes-box').style.display = 'none';
-            }
+
+                        // LINK PASTA DE ARTES (E5)
+                        var linkArt = dados.configuracoes.link_artes || "";
+                        if (linkArt && String(linkArt).trim() !== "") {
+                            linkDriveArtes = String(linkArt).trim();
+                            document.getElementById('artes-url-display').value = linkDriveArtes;
+                            document.getElementById('btn-open-artes').href = linkDriveArtes;
+                            document.getElementById('artes-box').style.display = 'block';
+                        } else {
+                            document.getElementById('artes-box').style.display = 'none';
+                        }
+                    }
+                })
+                .catch(err => {
+                    console.error("Erro ao buscar dados do evento:", err);
+                    document.getElementById('event-title-text').innerText = "Evento #" + id;
+                });
         }
 
-        function carregarPreview() {
-            atualizarUrlFinal();
-            var url = document.getElementById('final-url').value;
-            if (url) {
-                document.getElementById('preview-iframe').src = url + "&nocache=" + new Date().getTime();
-            } else {
-                alert("Informe um ID de Agendamento válido.");
-            }
+        function atualizarUrlFinal() {
+            var input = document.getElementById('event-id');
+            var id = input ? input.value.trim() : '';
+
+            var corFundo = document.getElementById('color-bg').value;
+            var corTexto = document.getElementById('color-text').value;
+
+            var baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/')) + '/index.html';
+            var urlFinal = baseUrl + '?evento=' + encodeURIComponent(id) + 
+                           '&corFundo=' + encodeURIComponent(corFundo) + 
+                           '&corTexto=' + encodeURIComponent(corTexto);
+
+            document.getElementById('generated-url').value = urlFinal;
+
+            var iframe = document.getElementById('preview-iframe');
+            iframe.src = urlFinal + '&v=' + new Date().getTime();
         }
 
-        function copiarLinkVMix() {
-            atualizarUrlFinal();
-            var url = document.getElementById('final-url').value;
-            if (url) {
-                navigator.clipboard.writeText(url);
-                alert("Link para o vMix copiado com sucesso!");
-            } else {
-                alert("Informe um ID de Agendamento primeiro.");
-            }
+        function copiarLink() {
+            var urlInput = document.getElementById('generated-url');
+            urlInput.select();
+            navigator.clipboard.writeText(urlInput.value);
+            exibirToast("Link do vMix copiado!");
         }
 
         function copiarLinkDrive() {
             if (linkDriveVideos) {
                 navigator.clipboard.writeText(linkDriveVideos);
-                alert("Link da pasta de vídeos copiado!");
+                exibirToast("Link da pasta de vídeos copiado!");
             }
         }
 
         function copiarLinkArtes() {
             if (linkDriveArtes) {
                 navigator.clipboard.writeText(linkDriveArtes);
-                alert("Link da pasta de artes copiado!");
+                exibirToast("Link da pasta de artes copiado!");
             }
         }
+
+        function exibirToast(mensagem) {
+            var toast = document.getElementById('toast');
+            toast.innerText = mensagem;
+            toast.style.display = 'block';
+            setTimeout(function() { toast.style.display = 'none'; }, 2500);
+        }
+    </script>
+</head>
+<body>
+
+    <div class="main-container">
+        <div class="card-control">
+            <div class="header">
+                <h1>Gabaritos Estratégia</h1>
+                <p>Gerador de overlays em tempo real</p>
+            </div>
+
+            <div class="form-group">
+                <label for="event-id">ID do Agendamento:</label>
+                <input type="text" id="event-id" placeholder="INSERIR O ID DO INTRA AQUI!" autocomplete="off">
+            </div>
+
+            <div class="title-box" id="title-box">
+                <label style="margin-bottom: 4px; color: rgba(224, 242, 254, 0.7);">Evento:</label>
+                <div class="title-value" id="event-title-text">Buscando dados da planilha...</div>
+            </div>
+
+            <div class="color-picker-container" id="color-section">
+                <div class="custom-color-row">
+                    <label style="margin: 0;">Cor do Retângulo:</label>
+                    <input type="color" id="color-bg" value="#4a2b82" onchange="atualizarUrlFinal()">
+                </div>
+                <div class="custom-color-row">
+                    <label style="margin: 0;">Cor da Letra:</label>
+                    <input type="color" id="color-text" value="#ffffff" onchange="atualizarUrlFinal()">
+                </div>
+            </div>
+
+            <!-- PASTA DE VÍDEOS / MÍDIAS (E4) -->
+            <div class="drive-box" id="drive-box">
+                <label>Pasta de Vídeos / Mídias do Evento:</label>
+                <input type="text" class="output-url" id="drive-url-display" readonly style="margin-top: 5px;">
+                <div class="drive-actions">
+                    <a href="#" id="btn-open-drive" target="_blank" class="btn-drive-open">📂 Abrir Pasta</a>
+                    <button type="button" class="btn-drive-copy" onclick="copiarLinkDrive()">📋 Copiar Link</button>
+                </div>
+            </div>
+
+            <!-- PASTA DE ARTES DO EVENTO (E5) -->
+            <div class="drive-box" id="artes-box">
+                <label>Pasta de Artes do Evento:</label>
+                <input type="text" class="output-url" id="artes-url-display" readonly style="margin-top: 5px;">
+                <div class="drive-actions">
+                    <a href="#" id="btn-open-artes" target="_blank" class="btn-artes-open">🎨 Abrir Pasta Artes</a>
+                    <button type="button" class="btn-drive-copy" onclick="copiarLinkArtes()">📋 Copiar Link</button>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="btn-generate" id="btn-gerar" onclick="gerarLink()">Carregar & Pré-visualizar</button>
+                <button class="btn-copy" id="btn-copy" onclick="copiarLink()">Copiar Link do vMix</button>
+            </div>
+
+            <div class="output-box" id="output-box">
+                <label style="margin-top: 12px;">URL Gerada para a entrada Web Browser do vMix:</label>
+                <input type="text" class="output-url" id="generated-url" readonly>
+            </div>
+        </div>
+
+        <div class="preview-container" id="preview-container">
+            <iframe id="preview-iframe" src=""></iframe>
+        </div>
+    </div>
+
+    <div class="footer-logo">
+        <img src="https://lh3.googleusercontent.com/d/14liJU9Uk5wsCe1spKmSYV-DytETRkvGS" alt="Estratégia Concursos">
+    </div>
+
+    <div class="toast" id="toast">Link copiado com sucesso!</div>
+
+    <script>
+        document.getElementById('event-id').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                gerarLink();
+            }
+        });
     </script>
 </body>
 </html>
