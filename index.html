@@ -147,7 +147,7 @@
                         callback(hex);
                     }
                 } catch(e) {
-                    console.warn("Manter cor padrão base.", e);
+                    console.warn("Não foi possível extrair a cor da imagem por restrição CORS.", e);
                 }
             };
         }
@@ -218,25 +218,57 @@
             });
         }
 
-        function rotacionarPaginas() {
-            if (gabaritoCompleto.length > limitePorPagina) {
-                const grid = document.getElementById("grid-respostas");
-                grid.style.opacity = "0";
+        // VERIFICA SE A PÁGINA POSSUI PELO MENOS UMA RESPOSTA
+        function paginaTemResposta(indexPagina) {
+            let inicio = indexPagina * limitePorPagina;
+            let fim = inicio + limitePorPagina;
+            let itensPagina = gabaritoCompleto.slice(inicio, fim);
+            
+            return itensPagina.some(q => q.resposta !== undefined && q.resposta !== null && String(q.resposta).trim() !== "");
+        }
 
-                setTimeout(function() {
-                    paginaAtual++;
-                    if ((paginaAtual * limitePorPagina) >= gabaritoCompleto.length) {
-                        paginaAtual = 0;
-                    }
-                    desenharTela();
-                    grid.style.opacity = "1";
-                }, 1200); 
+        // DESCOBRE A PRÓXIMA PÁGINA QUE DEVE APARECER NA TELA
+        function getProximaPagina(atual) {
+            let totalPaginas = Math.ceil(gabaritoCompleto.length / limitePorPagina);
+            if (totalPaginas <= 1) return atual;
+
+            let proxima = atual + 1;
+            
+            for (let i = 0; i < totalPaginas; i++) {
+                if (proxima >= totalPaginas) proxima = 0;
+                
+                if (paginaTemResposta(proxima)) {
+                    return proxima;
+                }
+                proxima++;
             }
+            
+            // Se NENHUMA página tiver resposta, fixa na primeira página (0)
+            return 0;
+        }
+
+        // EXECUTA A ROTAÇÃO INTELIGENTE A CADA 2 MINUTOS
+        function rotacionarPaginas() {
+            if (gabaritoCompleto.length <= limitePorPagina) return;
+
+            let proximaPagina = getProximaPagina(paginaAtual);
+
+            // Se a próxima página for a mesma que já está na tela, não faz nada (evita o piscar)
+            if (proximaPagina === paginaAtual) return;
+
+            const grid = document.getElementById("grid-respostas");
+            grid.style.opacity = "0";
+
+            setTimeout(function() {
+                paginaAtual = proximaPagina;
+                desenharTela();
+                grid.style.opacity = "1";
+            }, 1200); 
         }
 
         carregarDados();
         setInterval(carregarDados, 10000); 
-        setInterval(rotacionarPaginas, 120000); 
+        setInterval(rotacionarPaginas, 120000); // 120.000 ms = 2 minutos
     </script>
 </body>
 </html>
