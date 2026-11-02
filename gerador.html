@@ -55,9 +55,9 @@
             text-align: center;
         }
 
-        /* COLUNA DIREITA (Sempre visível) */
+        /* COLUNA DIREITA (Invisível até o clique inicial) */
         .right-column {
-            display: flex; 
+            display: none; 
             flex-direction: column;
             gap: 20px;
             width: 800px;
@@ -192,7 +192,7 @@
         /* AÇÕES E BOTÕES */
         .actions { 
             display: flex; 
-            flex-direction: column; /* Coloca os botões um embaixo do outro */
+            flex-direction: column; 
             gap: 12px; 
         }
 
@@ -207,9 +207,9 @@
         }
 
         .btn-generate { background: linear-gradient(135deg, #0284c7 0%, #1d4ed8 100%); color: white; }
-        .btn-copy { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; display: none; }
+        .btn-copy { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; }
 
-        .output-box { margin-top: 18px; display: none; text-align: left; }
+        .output-box { margin-top: 18px; text-align: left; }
         .output-url {
             width: 100%;
             padding: 12px;
@@ -267,19 +267,19 @@
                 return;
             }
 
+            // Exibe as caixas de informações
             document.getElementById('title-box').style.display = 'block';
             document.getElementById('info-box').style.display = 'block';
+            document.getElementById('color-section').style.display = 'block';
             document.getElementById('event-title-text').innerText = "Buscando dados da planilha...";
             document.getElementById('total-questoes-text').innerText = "...";
 
+            // Oculta o botão inicial e exibe a coluna direita
+            document.getElementById('btn-gerar-inicial').style.display = 'none';
+            document.getElementById('right-column').style.display = 'flex';
+
             atualizarUrlFinal();
             buscarDadosEvento(id);
-
-            document.getElementById('color-section').style.display = 'block';
-            
-            // Exibe o botão de copiar e o campo da URL
-            document.getElementById('btn-copy').style.display = 'block';
-            document.getElementById('output-box').style.display = 'block';
         }
 
         function buscarDadosEvento(id) {
@@ -372,7 +372,7 @@
 
     <div class="main-container">
         
-        <!-- COLUNA ESQUERDA (Configurações e Links Rápidos) -->
+        <!-- COLUNA ESQUERDA -->
         <div class="card-control">
             <div class="header">
                 <h1>Gabaritos Estratégia</h1>
@@ -384,7 +384,11 @@
                 <input type="text" id="event-id" placeholder="INSERIR O ID DO INTRA AQUI!" autocomplete="off">
             </div>
 
-            <div class="title-box" id="title-box" style="margin-bottom: 12px;">
+            <!-- BOTÃO INICIAL: Fica visível apenas até o usuário clicar -->
+            <button class="btn-generate" id="btn-gerar-inicial" onclick="gerarLink()" style="margin-top: 5px;">Carregar & Pré-visualizar</button>
+
+            <!-- CAIXAS ESCONDIDAS (Aparecem após o clique) -->
+            <div class="title-box" id="title-box" style="margin-top: 15px; margin-bottom: 12px;">
                 <label style="margin-bottom: 4px; color: rgba(224, 242, 254, 0.7);">Evento:</label>
                 <div class="title-value" id="event-title-text">Buscando dados da planilha...</div>
             </div>
@@ -424,8 +428,8 @@
             </div>
         </div>
 
-        <!-- COLUNA DIREITA (Sempre visível, com botões abaixo do preview) -->
-        <div class="right-column">
+        <!-- COLUNA DIREITA (Invisível ao abrir. Aparece após inserir o ID) -->
+        <div class="right-column" id="right-column">
             
             <div class="preview-container" id="preview-container">
                 <iframe id="preview-iframe" src=""></iframe>
@@ -433,8 +437,9 @@
 
             <div class="bottom-control">
                 <div class="actions">
-                    <button class="btn-generate" id="btn-gerar" onclick="gerarLink()">Carregar & Pré-visualizar</button>
-                    <button class="btn-copy" id="btn-copy" onclick="copiarLink()">Copiar Link do vMix</button>
+                    <!-- BOTÃO SECUNDÁRIO: Aparece aqui após a transição -->
+                    <button class="btn-generate" onclick="gerarLink()">Carregar & Pré-visualizar</button>
+                    <button class="btn-copy" onclick="copiarLink()">Copiar Link do vMix</button>
                 </div>
 
                 <div class="output-box" id="output-box">
