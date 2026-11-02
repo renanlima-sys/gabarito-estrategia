@@ -71,7 +71,7 @@
             outline: none;
         }
 
-        /* CAIXA DO TÍTULO DO EVENTO (FIXA ABAIXO DO ID) */
+        /* CAIXAS DE INFORMAÇÃO */
         .title-box {
             display: none;
             margin-bottom: 20px;
@@ -254,7 +254,9 @@
             }
 
             document.getElementById('title-box').style.display = 'block';
+            document.getElementById('info-box').style.display = 'block';
             document.getElementById('event-title-text').innerText = "Buscando dados da planilha...";
+            document.getElementById('total-questoes-text').innerText = "...";
 
             atualizarUrlFinal();
             buscarDadosEvento(id);
@@ -272,6 +274,10 @@
                     if (dados.configuracoes) {
                         var titulo = dados.configuracoes.titulo || "";
                         document.getElementById('event-title-text').innerText = (titulo && String(titulo).trim() !== "") ? titulo : "Evento #" + id;
+
+                        // EXIBE A QUANTIDADE TOTAL DE QUESTÕES
+                        var total = dados.total_questoes || 0;
+                        document.getElementById('total-questoes-text').innerText = total;
 
                         // LINK PASTA DE VÍDEOS (E4)
                         var linkVid = dados.configuracoes.link_videos || "";
@@ -299,6 +305,7 @@
                 .catch(err => {
                     console.error("Erro ao buscar dados do evento:", err);
                     document.getElementById('event-title-text').innerText = "Evento #" + id;
+                    document.getElementById('total-questoes-text').innerText = "Erro ao carregar";
                 });
         }
 
@@ -363,9 +370,15 @@
                 <input type="text" id="event-id" placeholder="INSERIR O ID DO INTRA AQUI!" autocomplete="off">
             </div>
 
-            <div class="title-box" id="title-box">
+            <div class="title-box" id="title-box" style="margin-bottom: 12px;">
                 <label style="margin-bottom: 4px; color: rgba(224, 242, 254, 0.7);">Evento:</label>
                 <div class="title-value" id="event-title-text">Buscando dados da planilha...</div>
+            </div>
+
+            <!-- NOVA CAIXA: QUANTIDADE DE QUESTÕES -->
+            <div class="title-box" id="info-box">
+                <label style="margin-bottom: 4px; color: rgba(224, 242, 254, 0.7);">Quantidade de Questões:</label>
+                <div class="title-value" id="total-questoes-text">...</div>
             </div>
 
             <div class="color-picker-container" id="color-section">
