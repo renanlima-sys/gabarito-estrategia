@@ -94,14 +94,23 @@
         }
 
         function buscarDadosEvento(id) {
-            fetch(API_URL + "?evento=" + encodeURIComponent(id))
+            fetch(API_URL + "?evento=" + encodeURIComponent(id) + "&nocache=" + new Date().getTime())
                 .then(res => res.json())
                 .then(dados => {
+                    // NOVA PROTEÇÃO: Se a planilha devolver um erro, mostra no painel e para.
+                    if (dados.erro) {
+                        document.getElementById('event-title-text').innerText = "Erro: " + dados.erro;
+                        document.getElementById('event-title-text').style.color = "#ef4444"; // Cor vermelha
+                        document.getElementById('total-questoes-text').innerText = "0";
+                        return;
+                    }
+
+                    // Se encontrou o evento, carrega normalmente
                     if (dados.configuracoes) {
+                        document.getElementById('event-title-text').style.color = "#38bdf8"; // Volta à cor normal
                         document.getElementById('event-title-text').innerText = dados.configuracoes.titulo || "Evento #" + id;
                         document.getElementById('total-questoes-text').innerText = dados.total_questoes || 0;
 
-                        // Preenche automaticamente o que já está na planilha (E7-H7)
                         if(dados.configuracoes.tipo_prova !== undefined) {
                             document.getElementById('tipo-prova').value = dados.configuracoes.tipo_prova;
                             document.getElementById('posicao-prova').value = dados.configuracoes.posicao_prova || "top-left";
@@ -129,7 +138,8 @@
                         }
                     }
                 }).catch(err => {
-                    document.getElementById('event-title-text').innerText = "Erro ao carregar";
+                    document.getElementById('event-title-text').innerText = "Erro de ligação com a planilha.";
+                    document.getElementById('event-title-text').style.color = "#ef4444";
                 });
         }
 
