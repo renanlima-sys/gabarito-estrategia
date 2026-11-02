@@ -97,7 +97,7 @@
         
         const tipoProvaParam = params.get("tipoProva");
         const posicaoParam = params.get("posicao") || "top-left";
-        const tamanhoParam = params.get("tamanho") || "28";
+        const tamanhoParam = params.get("tamanho") || "40";
         const corProvaBgParam = params.get("corProvaBg");
         
         const corManualInformada = (corFundoParam && corFundoParam !== "%234a2b82" && corFundoParam !== "#4a2b82");
@@ -229,25 +229,25 @@
                 // Posicionamento 
                 switch(posicaoParam) {
                     case "top-left":
-                        container.style.top = "40px";
-                        container.style.left = "40px";
+                        container.style.top = "60px";
+                        container.style.left = "15px";
                         break;
                     case "top-center":
-                        container.style.top = "40px";
-                        container.style.left = "50%";
+                        container.style.top = "60px";
+                        container.style.left = "45%";
                         container.style.transform = "translateX(-50%)";
                         break;
                     case "top-right":
-                        container.style.top = "40px";
-                        container.style.right = "280px"; 
+                        container.style.top = "60px";
+                        container.style.right = "15px"; 
                         break;
                     case "bottom-left":
-                        container.style.bottom = "40px";
-                        container.style.left = "40px";
+                        container.style.bottom = "30px";
+                        container.style.left = "15px";
                         break;
                     case "bottom-right":
-                        container.style.bottom = "40px";
-                        container.style.right = "40px";
+                        container.style.bottom = "30px";
+                        container.style.right = "15px";
                         break;
                 }
             }
