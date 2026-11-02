@@ -24,206 +24,50 @@
             padding: 20px;
         }
 
-        @keyframes moverDegrade {
-            0% { background-position: 0% 30%; }
-            50% { background-position: 100% 70%; }
-            100% { background-position: 0% 30%; }
-        }
+        @keyframes moverDegrade { 0% { background-position: 0% 30%; } 50% { background-position: 100% 70%; } 100% { background-position: 0% 30%; } }
 
-        .main-container {
-            display: flex;
-            flex-direction: row;
-            align-items: flex-start;
-            justify-content: center;
-            gap: 30px;
-            width: 100%;
-            max-width: 1400px;
-            margin-bottom: 20px;
-        }
-
-        .card-control {
-            background: rgba(255, 255, 255, 0.04);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(56, 189, 248, 0.2);
-            border-radius: 24px;
-            padding: 35px 30px;
-            width: 450px;
-            flex-shrink: 0;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
-            text-align: center;
-        }
-
-        .right-column {
-            display: none; 
-            flex-direction: column;
-            gap: 20px;
-            width: 800px;
-            flex-shrink: 0;
-        }
-
-        .bottom-control {
-            background: rgba(255, 255, 255, 0.04);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(56, 189, 248, 0.2);
-            border-radius: 20px;
-            padding: 25px;
-            width: 100%;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
-            text-align: left;
-        }
-
+        .main-container { display: flex; flex-direction: row; align-items: flex-start; justify-content: center; gap: 30px; width: 100%; max-width: 1400px; margin-bottom: 20px; }
+        .card-control { background: rgba(255, 255, 255, 0.04); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(56, 189, 248, 0.2); border-radius: 24px; padding: 35px 30px; width: 450px; flex-shrink: 0; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6); text-align: center; }
+        .right-column { display: none; flex-direction: column; gap: 20px; width: 800px; flex-shrink: 0; }
+        .bottom-control { background: rgba(255, 255, 255, 0.04); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(56, 189, 248, 0.2); border-radius: 20px; padding: 25px; width: 100%; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6); text-align: left; }
+        
         .header h1 { font-size: 28px; font-weight: 700; color: #ffffff; margin-bottom: 6px; }
         .header p { color: rgba(224, 242, 254, 0.8); font-size: 14px; margin-bottom: 20px; }
 
         .form-group { margin-bottom: 12px; text-align: left; }
         label { display: block; margin-bottom: 8px; font-size: 13px; font-weight: 600; color: rgba(240, 249, 255, 0.9); }
 
-        input[type="text"], input[type="number"], select {
-            width: 100%;
-            padding: 14px;
-            border-radius: 12px;
-            border: 1px solid rgba(56, 189, 248, 0.25);
-            background-color: rgba(2, 6, 23, 0.6);
-            color: #fff;
-            font-size: 15px;
-            outline: none;
-        }
+        input[type="text"], input[type="number"], select { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid rgba(56, 189, 248, 0.25); background-color: rgba(2, 6, 23, 0.6); color: #fff; font-size: 15px; outline: none; }
+        input[type="color"] { border: none; width: 42px; height: 42px; border-radius: 8px; cursor: pointer; background: none; }
 
-        .title-box {
-            display: none;
-            margin-bottom: 20px;
-            text-align: left;
-            background: rgba(56, 189, 248, 0.08);
-            border: 1px solid rgba(56, 189, 248, 0.25);
-            border-radius: 12px;
-            padding: 12px 15px;
-        }
-
+        .title-box { display: none; margin-bottom: 20px; text-align: left; background: rgba(56, 189, 248, 0.08); border: 1px solid rgba(56, 189, 248, 0.25); border-radius: 12px; padding: 12px 15px; }
         .title-value { font-size: 15px; font-weight: 700; color: #38bdf8; word-break: break-word; }
 
-        .color-picker-container {
-            display: none;
-            margin-top: 15px;
-            text-align: left;
-            background: rgba(2, 6, 23, 0.4);
-            border-radius: 12px;
-            border: 1px solid rgba(56, 189, 248, 0.15);
-        }
-
+        .color-picker-container { display: none; margin-top: 15px; text-align: left; background: rgba(2, 6, 23, 0.4); border-radius: 12px; border: 1px solid rgba(56, 189, 248, 0.15); }
         .custom-color-row { display: flex; align-items: center; justify-content: space-between; }
 
-        input[type="color"] {
-            border: none;
-            width: 42px;
-            height: 42px;
-            border-radius: 8px;
-            cursor: pointer;
-            background: none;
-        }
-
-        .drive-box {
-            display: none;
-            margin-top: 14px;
-            text-align: left;
-            background: rgba(15, 23, 42, 0.7);
-            border: 1px solid rgba(56, 189, 248, 0.3);
-            border-radius: 12px;
-            padding: 15px;
-        }
-
+        .drive-box { display: none; margin-top: 14px; text-align: left; background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 12px; padding: 15px; }
         .drive-actions { display: flex; gap: 10px; margin-top: 10px; }
-
-        .btn-drive-open, .btn-artes-open {
-            color: white;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 10px;
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: bold;
-            flex: 1;
-            text-align: center;
-        }
-        .btn-drive-open { background: #2563eb; }
-        .btn-artes-open { background: #0284c7; }
-
-        .btn-drive-copy {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 10px;
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: bold;
-            flex: 1;
-            cursor: pointer;
-        }
-        .btn-drive-open:hover { background: #1d4ed8; }
-        .btn-artes-open:hover { background: #0369a1; }
-        .btn-drive-copy:hover { background: rgba(255, 255, 255, 0.2); }
+        .btn-drive-open, .btn-artes-open, .btn-drive-copy { display: flex; align-items: center; justify-content: center; padding: 10px; border-radius: 8px; font-size: 13px; font-weight: bold; flex: 1; text-align: center; text-decoration: none; color: white; cursor: pointer; }
+        .btn-drive-open { background: #2563eb; } .btn-artes-open { background: #0284c7; } .btn-drive-copy { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); }
+        .btn-drive-open:hover { background: #1d4ed8; } .btn-artes-open:hover { background: #0369a1; } .btn-drive-copy:hover { background: rgba(255, 255, 255, 0.2); }
 
         .actions { display: flex; flex-direction: column; gap: 12px; }
-
-        button {
-            width: 100%;
-            padding: 14px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 12px;
-            font-size: 15px;
-            font-weight: 700;
-            cursor: pointer;
-        }
-
+        button { width: 100%; padding: 14px; border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; }
+        
         .btn-generate { background: linear-gradient(135deg, #0284c7 0%, #1d4ed8 100%); color: white; }
         .btn-copy { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; }
+        .btn-salvar { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: #ffffff; border-color: rgba(255,255,255,0.3); }
+        .btn-salvar:disabled { opacity: 0.6; cursor: not-allowed; }
 
         .output-box { margin-top: 18px; text-align: left; }
-        .output-url {
-            width: 100%;
-            padding: 12px;
-            background: rgba(2, 6, 23, 0.8);
-            border: 1px dashed rgba(56, 189, 248, 0.5);
-            border-radius: 8px;
-            color: #34d399;
-            font-family: monospace;
-            font-size: 14px;
-            word-break: break-all;
-        }
+        .output-url { width: 100%; padding: 12px; background: rgba(2, 6, 23, 0.8); border: 1px dashed rgba(56, 189, 248, 0.5); border-radius: 8px; color: #34d399; font-family: monospace; font-size: 14px; word-break: break-all; }
 
-        .preview-container {
-            width: 100%;
-            height: 450px;
-            border: 1px solid rgba(56, 189, 248, 0.3);
-            border-radius: 20px;
-            overflow: hidden;
-            background-color: #000;
-        }
-
-        iframe {
-            width: 1920px;
-            height: 1080px;
-            border: none;
-            transform: scale(0.4166);
-            transform-origin: 0 0;
-        }
+        .preview-container { width: 100%; height: 450px; border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 20px; overflow: hidden; background-color: #000; }
+        iframe { width: 1920px; height: 1080px; border: none; transform: scale(0.4166); transform-origin: 0 0; }
 
         .footer-logo img { max-width: 160px; height: auto; opacity: 0.85; }
-        
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            background-color: #10b981;
-            color: #ffffff;
-            padding: 12px 28px;
-            border-radius: 30px;
-            font-weight: bold;
-            display: none;
-            z-index: 100;
-        }
+        .toast { position: fixed; bottom: 30px; background-color: #10b981; color: #ffffff; padding: 12px 28px; border-radius: 30px; font-weight: bold; display: none; z-index: 100; }
     </style>
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbzZCCQoeVY2cRJSIlcHZCMY0LPUaH-MFhcwWp4yLgWt5NNpNm6_aZpY11gHGN9z9hPfWA/exec";
@@ -233,23 +77,16 @@
         function gerarLink() {
             var input = document.getElementById('event-id');
             var id = input ? input.value.trim() : '';
-
-            if (!id) {
-                alert('Por favor, digite o ID do evento!');
-                return;
-            }
+            if (!id) { alert('Por favor, digite o ID do evento!'); return; }
 
             document.getElementById('title-box').style.display = 'block';
             document.getElementById('info-box').style.display = 'block';
             document.getElementById('color-section').style.display = 'block';
             document.getElementById('prova-section').style.display = 'block'; 
-            
             document.getElementById('event-title-text').innerText = "A buscar dados da planilha...";
-            document.getElementById('total-questoes-text').innerText = "...";
-
+            
             var btnInicial = document.getElementById('btn-gerar-inicial');
             if (btnInicial) btnInicial.style.display = 'none';
-            
             document.getElementById('right-column').style.display = 'flex';
 
             atualizarUrlFinal();
@@ -261,98 +98,107 @@
                 .then(res => res.json())
                 .then(dados => {
                     if (dados.configuracoes) {
-                        var titulo = dados.configuracoes.titulo || "";
-                        document.getElementById('event-title-text').innerText = (titulo && String(titulo).trim() !== "") ? titulo : "Evento #" + id;
+                        document.getElementById('event-title-text').innerText = dados.configuracoes.titulo || "Evento #" + id;
+                        document.getElementById('total-questoes-text').innerText = dados.total_questoes || 0;
 
-                        var total = dados.total_questoes || 0;
-                        document.getElementById('total-questoes-text').innerText = total;
+                        // Preenche automaticamente o que já está na planilha (E7-H7)
+                        if(dados.configuracoes.tipo_prova !== undefined) {
+                            document.getElementById('tipo-prova').value = dados.configuracoes.tipo_prova;
+                            document.getElementById('posicao-prova').value = dados.configuracoes.posicao_prova || "top-left";
+                            document.getElementById('tamanho-prova').value = dados.configuracoes.tamanho_prova || "40";
+                            
+                            if(dados.configuracoes.cor_prova && dados.configuracoes.cor_prova !== "") {
+                                document.getElementById('usar-cor-prova').checked = true;
+                                document.getElementById('cor-prova-bg').value = dados.configuracoes.cor_prova;
+                            } else {
+                                document.getElementById('usar-cor-prova').checked = false;
+                            }
+                        }
 
-                        var linkVid = dados.configuracoes.link_videos || "";
-                        if (linkVid && String(linkVid).trim() !== "") {
-                            linkDriveVideos = String(linkVid).trim();
+                        if (dados.configuracoes.link_videos) {
+                            linkDriveVideos = dados.configuracoes.link_videos;
                             document.getElementById('drive-url-display').value = linkDriveVideos;
                             document.getElementById('btn-open-drive').href = linkDriveVideos;
                             document.getElementById('drive-box').style.display = 'block';
-                        } else {
-                            document.getElementById('drive-box').style.display = 'none';
                         }
-
-                        var linkArt = dados.configuracoes.link_artes || "";
-                        if (linkArt && String(linkArt).trim() !== "") {
-                            linkDriveArtes = String(linkArt).trim();
+                        if (dados.configuracoes.link_artes) {
+                            linkDriveArtes = dados.configuracoes.link_artes;
                             document.getElementById('artes-url-display').value = linkDriveArtes;
                             document.getElementById('btn-open-artes').href = linkDriveArtes;
                             document.getElementById('artes-box').style.display = 'block';
-                        } else {
-                            document.getElementById('artes-box').style.display = 'none';
                         }
                     }
-                })
-                .catch(err => {
-                    console.error("Erro ao buscar dados do evento:", err);
-                    document.getElementById('event-title-text').innerText = "Evento #" + id;
-                    document.getElementById('total-questoes-text').innerText = "Erro ao carregar";
+                }).catch(err => {
+                    document.getElementById('event-title-text').innerText = "Erro ao carregar";
                 });
         }
 
+        // AGORA APENAS AS CORES E O EVENTO VÃO NA URL DO VMIX
         function atualizarUrlFinal() {
-            var input = document.getElementById('event-id');
-            var id = input ? input.value.trim() : '';
-
+            var id = document.getElementById('event-id') ? document.getElementById('event-id').value.trim() : '';
             var corFundo = document.getElementById('color-bg').value;
             var corTexto = document.getElementById('color-text').value;
             
-            // Dados da Prova
-            var tipoProva = document.getElementById('tipo-prova') ? document.getElementById('tipo-prova').value.trim() : '';
-            var posicaoProva = document.getElementById('posicao-prova') ? document.getElementById('posicao-prova').value : 'top-left';
-            var tamanhoProva = document.getElementById('tamanho-prova') ? document.getElementById('tamanho-prova').value : '40';
-            
-            var usarCorProva = document.getElementById('usar-cor-prova') ? document.getElementById('usar-cor-prova').checked : false;
-            var corProvaBg = document.getElementById('cor-prova-bg') ? document.getElementById('cor-prova-bg').value : '';
-
             var baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/')) + '/index.html';
-            
-            var urlFinal = baseUrl + '?evento=' + encodeURIComponent(id) + 
-                           '&corFundo=' + encodeURIComponent(corFundo) + 
-                           '&corTexto=' + encodeURIComponent(corTexto);
-
-            if (tipoProva !== '') {
-                urlFinal += '&tipoProva=' + encodeURIComponent(tipoProva) + 
-                            '&posicao=' + encodeURIComponent(posicaoProva) + 
-                            '&tamanho=' + encodeURIComponent(tamanhoProva);
-                if (usarCorProva) {
-                    urlFinal += '&corProvaBg=' + encodeURIComponent(corProvaBg);
-                }
-            }
+            var urlFinal = baseUrl + '?evento=' + encodeURIComponent(id) + '&corFundo=' + encodeURIComponent(corFundo) + '&corTexto=' + encodeURIComponent(corTexto);
 
             document.getElementById('generated-url').value = urlFinal;
-
             var iframe = document.getElementById('preview-iframe');
-            if (iframe) {
-                iframe.src = urlFinal + '&v=' + new Date().getTime();
-            }
+            if (iframe) iframe.src = urlFinal + '&v=' + new Date().getTime();
+        }
+
+        // NOVA FUNÇÃO: SALVA OS DADOS DIRETAMENTE NA PLANILHA (Células E7 a H7)
+        function salvarDadosSelo() {
+            var id = document.getElementById('event-id').value.trim();
+            if (!id) { alert("Carregue um ID primeiro!"); return; }
+
+            var tipoProva = document.getElementById('tipo-prova').value;
+            var posicaoProva = document.getElementById('posicao-prova').value;
+            var tamanhoProva = document.getElementById('tamanho-prova').value;
+            var corProvaBg = document.getElementById('usar-cor-prova').checked ? document.getElementById('cor-prova-bg').value : "";
+
+            var btn = document.getElementById('btn-salvar');
+            btn.innerText = "Atualizando...";
+            btn.disabled = true;
+
+            var requestUrl = API_URL + "?evento=" + encodeURIComponent(id) + 
+                             "&acao=salvar_prova" +
+                             "&tipo_prova=" + encodeURIComponent(tipoProva) + 
+                             "&posicao_prova=" + encodeURIComponent(posicaoProva) + 
+                             "&tamanho_prova=" + encodeURIComponent(tamanhoProva) + 
+                             "&cor_prova=" + encodeURIComponent(corProvaBg);
+
+            fetch(requestUrl)
+                .then(res => res.json())
+                .then(dados => {
+                    btn.innerText = "Atualizar Selo Ao Vivo (vMix)";
+                    btn.disabled = false;
+                    if(dados.sucesso) {
+                        exibirToast("Selo enviado para a Planilha! O vMix vai atualizar em breve.");
+                        atualizarUrlFinal(); // Força o iframe local a atualizar
+                    } else { alert("Erro: " + dados.erro); }
+                }).catch(err => {
+                    btn.innerText = "Atualizar Selo Ao Vivo (vMix)";
+                    btn.disabled = false;
+                    alert("Erro na conexão com a planilha.");
+                });
         }
 
         function copiarLink() {
             var urlInput = document.getElementById('generated-url');
             urlInput.select();
             navigator.clipboard.writeText(urlInput.value);
-            exibirToast("Link do vMix copiado com sucesso!");
+            exibirToast("Link fixo do vMix copiado com sucesso!");
         }
 
-        function copiarLinkDrive() {
-            if (linkDriveVideos) { navigator.clipboard.writeText(linkDriveVideos); exibirToast("Link copiado!"); }
-        }
-
-        function copiarLinkArtes() {
-            if (linkDriveArtes) { navigator.clipboard.writeText(linkDriveArtes); exibirToast("Link copiado!"); }
-        }
+        function copiarLinkDrive() { if (linkDriveVideos) { navigator.clipboard.writeText(linkDriveVideos); exibirToast("Copiado!"); } }
+        function copiarLinkArtes() { if (linkDriveArtes) { navigator.clipboard.writeText(linkDriveArtes); exibirToast("Copiado!"); } }
 
         function exibirToast(mensagem) {
             var toast = document.getElementById('toast');
             toast.innerText = mensagem;
             toast.style.display = 'block';
-            setTimeout(function() { toast.style.display = 'none'; }, 2500);
+            setTimeout(function() { toast.style.display = 'none'; }, 3000);
         }
     </script>
 </head>
@@ -383,7 +229,6 @@
                 <div class="title-value" id="total-questoes-text">...</div>
             </div>
 
-            <!-- SELETOR DE CORES GERAL -->
             <div class="color-picker-container" id="color-section" style="padding: 12px 15px;">
                 <label style="margin-bottom: 8px; color: rgba(224, 242, 254, 0.9); font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px; display: block;">Cores Base</label>
                 <div style="display: flex; gap: 15px; align-items: center;">
@@ -398,16 +243,15 @@
                 </div>
             </div>
 
-            <!-- TIPO DE PROVA, POSIÇÃO, TAMANHO E COR CUSTOMIZADA -->
             <div class="title-box" id="prova-section" style="margin-top: 15px; margin-bottom: 0; padding: 15px;">
-                <label style="margin-bottom: 8px; color: rgba(224, 242, 254, 0.9); font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px; display: block;">Tipo de Prova (Selo Opcional)</label>
+                <label style="margin-bottom: 8px; color: rgba(224, 242, 254, 0.9); font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px; display: block;">Tipo de Prova (Selo Dinâmico)</label>
                 
-                <input type="text" id="tipo-prova" placeholder="Ex: Prova Tipo 1 - Azul" oninput="atualizarUrlFinal()" style="margin-bottom: 12px; padding: 10px;">
+                <input type="text" id="tipo-prova" placeholder="Ex: Prova Tipo 1 - Azul" style="margin-bottom: 12px; padding: 10px;">
                 
                 <div style="display: flex; gap: 10px; margin-bottom: 12px;">
                     <div style="flex: 1;">
                         <label style="margin-bottom: 6px; font-size: 11px; color: rgba(224, 242, 254, 0.9);">Posição:</label>
-                        <select id="posicao-prova" onchange="atualizarUrlFinal()" style="padding: 10px; font-size: 12px;">
+                        <select id="posicao-prova" style="padding: 10px; font-size: 12px;">
                             <option value="top-left">Superior Esq.</option>
                             <option value="top-center">Superior Centro</option>
                             <option value="top-right">Superior Dir.</option>
@@ -417,17 +261,20 @@
                     </div>
                     <div style="flex: 1;">
                         <label style="margin-bottom: 6px; font-size: 11px; color: rgba(224, 242, 254, 0.9);">Tam. Fonte (px):</label>
-                        <input type="number" id="tamanho-prova" value="40" min="12" max="80" oninput="atualizarUrlFinal()" style="padding: 10px; font-size: 12px;">
+                        <input type="number" id="tamanho-prova" value="40" min="12" max="80" style="padding: 10px; font-size: 12px;">
                     </div>
                 </div>
 
-                <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(2, 6, 23, 0.6); padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(56, 189, 248, 0.25);">
+                <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(2, 6, 23, 0.6); padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(56, 189, 248, 0.25); margin-bottom: 15px;">
                     <div style="display: flex; align-items: center; gap: 8px;">
-                        <input type="checkbox" id="usar-cor-prova" onchange="atualizarUrlFinal()" style="width: auto;">
-                        <label for="usar-cor-prova" style="margin: 0; font-size: 12px; cursor: pointer;">Cor de Fundo Exclusiva</label>
+                        <input type="checkbox" id="usar-cor-prova" style="width: auto;">
+                        <label for="usar-cor-prova" style="margin: 0; font-size: 12px; cursor: pointer;">Cor Exclusiva</label>
                     </div>
-                    <input type="color" id="cor-prova-bg" value="#0284c7" onchange="document.getElementById('usar-cor-prova').checked = true; atualizarUrlFinal()">
+                    <input type="color" id="cor-prova-bg" value="#0284c7" onchange="document.getElementById('usar-cor-prova').checked = true;">
                 </div>
+
+                <!-- NOVO BOTÃO QUE ENVIA PARA A PLANILHA -->
+                <button type="button" class="btn-salvar" id="btn-salvar" onclick="salvarDadosSelo()">Atualizar Selo Ao Vivo (vMix)</button>
             </div>
 
             <div class="drive-box" id="drive-box">
@@ -438,7 +285,6 @@
                     <button type="button" class="btn-drive-copy" onclick="copiarLinkDrive()">📋 Copiar Link</button>
                 </div>
             </div>
-
             <div class="drive-box" id="artes-box">
                 <label>Pasta de Artes do Evento:</label>
                 <input type="text" class="output-url" id="artes-url-display" readonly style="margin-top: 5px;">
@@ -457,12 +303,12 @@
 
             <div class="bottom-control">
                 <div class="actions">
-                    <button class="btn-generate" onclick="gerarLink()">Carregar & Pré-visualizar</button>
+                    <button class="btn-generate" onclick="gerarLink()">Carregar & Pré-visualizar (Reset)</button>
                     <button class="btn-copy" id="btn-copy" onclick="copiarLink()">Copiar Link do vMix</button>
                 </div>
 
                 <div class="output-box" id="output-box">
-                    <label style="display: block; margin-bottom: 6px; font-size: 13px; font-weight: 600; color: rgba(240, 249, 255, 0.9);">URL Gerada para a entrada Web Browser do vMix:</label>
+                    <label style="display: block; margin-bottom: 6px; font-size: 13px; font-weight: 600; color: rgba(240, 249, 255, 0.9);">URL FIXA para a entrada Web Browser do vMix:</label>
                     <input type="text" class="output-url" id="generated-url" readonly>
                 </div>
             </div>
@@ -470,11 +316,9 @@
         </div>
 
     </div>
-
     <div class="footer-logo">
         <img src="https://lh3.googleusercontent.com/d/14liJU9Uk5wsCe1spKmSYV-DytETRkvGS" alt="Estratégia Concursos">
     </div>
-
     <div class="toast" id="toast">Link copiado com sucesso!</div>
 
     <script>
