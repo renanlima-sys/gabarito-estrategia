@@ -30,7 +30,7 @@
         
         #tipo-prova-container {
             display: none; position: absolute; z-index: 10; font-weight: 800; border-radius: 12px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4); text-transform: uppercase; white-space: nowrap; transition: all 0.5s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4); text-transform: uppercase; white-space: nowrap; transition: all 0.3s ease;
         }
     </style>
 </head>
@@ -49,6 +49,7 @@
         const eventoID = params.get("evento");
         const corFundoParam = params.get("corFundo");
         const corTextoParam = params.get("corTexto");
+        const isPreviewMode = params.has("preview");
         
         const corManualInformada = (corFundoParam && corFundoParam !== "%234a2b82" && corFundoParam !== "#4a2b82");
         let corFundo = corManualInformada ? decodeURIComponent(corFundoParam) : "#1d4ed8";
@@ -56,8 +57,22 @@
 
         let gabaritoCompleto = [];
         let configProva = { tipo: "", posicao: "top-left", tamanho: "40", cor: "" };
+        let previewModificadoManualmente = false;
+
         let paginaAtual = 0;
         const limitePorPagina = 60; 
+
+        // Escuta os ajustes em tempo real feitos no gerador
+        window.addEventListener("message", function(event) {
+            if (event.data && event.data.action === "previewProva") {
+                previewModificadoManualmente = true;
+                configProva.tipo = event.data.tipoProva !== undefined ? event.data.tipoProva : "";
+                configProva.posicao = event.data.posicaoProva || "top-left";
+                configProva.tamanho = event.data.tamanhoProva || "40";
+                configProva.cor = event.data.corProvaBg || "";
+                aplicarTipoProva();
+            }
+        });
 
         function converterLinkDrive(url) {
             if (!url) return "";
@@ -108,11 +123,13 @@
                     }
 
                     if (dados.configuracoes) {
-                        // Salva as configurações de prova vindas da planilha (E7-H7)
-                        configProva.tipo = dados.configuracoes.tipo_prova || "";
-                        configProva.posicao = dados.configuracoes.posicao_prova || "top-left";
-                        configProva.tamanho = dados.configuracoes.tamanho_prova || "40";
-                        configProva.cor = dados.configuracoes.cor_prova || "";
+                        // Se não estiver em modo de teste manual no gerador, lê os dados oficiais da planilha
+                        if (!previewModificadoManualmente) {
+                            configProva.tipo = dados.configuracoes.tipo_prova || "";
+                            configProva.posicao = dados.configuracoes.posicao_prova || "top-left";
+                            configProva.tamanho = dados.configuracoes.tamanho_prova || "40";
+                            configProva.cor = dados.configuracoes.cor_prova || "";
+                        }
 
                         if (dados.configuracoes.arte_fundo) {
                             var linkImg = converterLinkDrive(dados.configuracoes.arte_fundo);
@@ -135,7 +152,8 @@
 
         function aplicarTipoProva() {
             const container = document.getElementById("tipo-prova-container");
-            
+            if (!container) return;
+
             if (configProva.tipo && configProva.tipo.trim() !== "") {
                 container.innerText = configProva.tipo;
                 container.style.display = "block";
@@ -143,7 +161,7 @@
                 container.style.backgroundColor = (configProva.cor && configProva.cor !== "") ? configProva.cor : corFundo;
                 container.style.color = corTexto;
 
-                let tamanhoFonte = parseInt(configProva.tamanho);
+                let tamanhoFonte = parseInt(configProva.tamanho) || 40;
                 container.style.fontSize = tamanhoFonte + "px";
                 
                 let paddingVertical = Math.max(8, tamanhoFonte * 0.4);
