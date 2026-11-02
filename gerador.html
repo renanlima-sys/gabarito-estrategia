@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-PT">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -80,7 +80,7 @@
         .form-group { margin-bottom: 12px; text-align: left; }
         label { display: block; margin-bottom: 8px; font-size: 13px; font-weight: 600; color: rgba(240, 249, 255, 0.9); }
 
-        input[type="text"], select {
+        input[type="text"], input[type="number"], select {
             width: 100%;
             padding: 14px;
             border-radius: 12px;
@@ -242,7 +242,7 @@
             document.getElementById('title-box').style.display = 'block';
             document.getElementById('info-box').style.display = 'block';
             document.getElementById('color-section').style.display = 'block';
-            document.getElementById('prova-section').style.display = 'block'; // Nova seção do tipo de prova
+            document.getElementById('prova-section').style.display = 'block'; 
             
             document.getElementById('event-title-text').innerText = "A buscar dados da planilha...";
             document.getElementById('total-questoes-text').innerText = "...";
@@ -302,9 +302,13 @@
             var corFundo = document.getElementById('color-bg').value;
             var corTexto = document.getElementById('color-text').value;
             
-            // Novos Campos
+            // Dados da Prova
             var tipoProva = document.getElementById('tipo-prova') ? document.getElementById('tipo-prova').value.trim() : '';
             var posicaoProva = document.getElementById('posicao-prova') ? document.getElementById('posicao-prova').value : 'top-left';
+            var tamanhoProva = document.getElementById('tamanho-prova') ? document.getElementById('tamanho-prova').value : '28';
+            
+            var usarCorProva = document.getElementById('usar-cor-prova') ? document.getElementById('usar-cor-prova').checked : false;
+            var corProvaBg = document.getElementById('cor-prova-bg') ? document.getElementById('cor-prova-bg').value : '';
 
             var baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/')) + '/index.html';
             
@@ -312,9 +316,13 @@
                            '&corFundo=' + encodeURIComponent(corFundo) + 
                            '&corTexto=' + encodeURIComponent(corTexto);
 
-            // Adiciona parâmetros do tipo de prova se estiver preenchido
             if (tipoProva !== '') {
-                urlFinal += '&tipoProva=' + encodeURIComponent(tipoProva) + '&posicao=' + encodeURIComponent(posicaoProva);
+                urlFinal += '&tipoProva=' + encodeURIComponent(tipoProva) + 
+                            '&posicao=' + encodeURIComponent(posicaoProva) + 
+                            '&tamanho=' + encodeURIComponent(tamanhoProva);
+                if (usarCorProva) {
+                    urlFinal += '&corProvaBg=' + encodeURIComponent(corProvaBg);
+                }
             }
 
             document.getElementById('generated-url').value = urlFinal;
@@ -352,7 +360,6 @@
 
     <div class="main-container">
         
-        <!-- COLUNA ESQUERDA -->
         <div class="card-control">
             <div class="header">
                 <h1>Gabaritos Estratégia</h1>
@@ -366,7 +373,6 @@
 
             <button class="btn-generate" id="btn-gerar-inicial" onclick="gerarLink()" style="margin-top: 5px;">Carregar & Pré-visualizar</button>
 
-            <!-- CAIXAS ESCONDIDAS (Aparecem após o clique) -->
             <div class="title-box" id="title-box" style="margin-top: 15px; margin-bottom: 12px;">
                 <label style="margin-bottom: 4px; color: rgba(224, 242, 254, 0.7);">Evento:</label>
                 <div class="title-value" id="event-title-text">A buscar dados da planilha...</div>
@@ -377,32 +383,51 @@
                 <div class="title-value" id="total-questoes-text">...</div>
             </div>
 
+            <!-- SELETOR DE CORES GERAL -->
             <div class="color-picker-container" id="color-section" style="padding: 12px 15px;">
+                <label style="margin-bottom: 8px; color: rgba(224, 242, 254, 0.9); font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px; display: block;">Cores Base</label>
                 <div style="display: flex; gap: 15px; align-items: center;">
                     <div class="custom-color-row" style="flex: 1; margin-bottom: 0;">
-                        <label style="margin: 0; font-size: 12px;">Retângulo:</label>
+                        <label style="margin: 0; font-size: 12px;">Retângulos:</label>
                         <input type="color" id="color-bg" value="#4a2b82" onchange="atualizarUrlFinal()">
                     </div>
                     <div class="custom-color-row" style="flex: 1; margin-bottom: 0;">
-                        <label style="margin: 0; font-size: 12px;">Letra:</label>
+                        <label style="margin: 0; font-size: 12px;">Letras:</label>
                         <input type="color" id="color-text" value="#ffffff" onchange="atualizarUrlFinal()">
                     </div>
                 </div>
             </div>
 
-            <!-- NOVO: TIPO DE PROVA E POSICIONAMENTO -->
+            <!-- TIPO DE PROVA, POSIÇÃO, TAMANHO E COR CUSTOMIZADA -->
             <div class="title-box" id="prova-section" style="margin-top: 15px; margin-bottom: 0; padding: 15px;">
-                <label style="margin-bottom: 8px; color: rgba(224, 242, 254, 0.9);">Tipo de Prova (Opcional):</label>
+                <label style="margin-bottom: 8px; color: rgba(224, 242, 254, 0.9); font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px; display: block;">Tipo de Prova (Selo Opcional)</label>
+                
                 <input type="text" id="tipo-prova" placeholder="Ex: Prova Tipo 1 - Azul" oninput="atualizarUrlFinal()" style="margin-bottom: 12px; padding: 10px;">
                 
-                <label style="margin-bottom: 8px; color: rgba(224, 242, 254, 0.9);">Posição do Texto:</label>
-                <select id="posicao-prova" onchange="atualizarUrlFinal()" style="padding: 10px;">
-                    <option value="top-left">Superior Esquerdo</option>
-                    <option value="top-center">Superior Centro</option>
-                    <option value="top-right">Superior Direito</option>
-                    <option value="bottom-left">Inferior Esquerdo</option>
-                    <option value="bottom-right">Inferior Direito</option>
-                </select>
+                <div style="display: flex; gap: 10px; margin-bottom: 12px;">
+                    <div style="flex: 1;">
+                        <label style="margin-bottom: 6px; font-size: 11px; color: rgba(224, 242, 254, 0.9);">Posição:</label>
+                        <select id="posicao-prova" onchange="atualizarUrlFinal()" style="padding: 10px; font-size: 12px;">
+                            <option value="top-left">Superior Esq.</option>
+                            <option value="top-center">Superior Centro</option>
+                            <option value="top-right">Superior Dir.</option>
+                            <option value="bottom-left">Inferior Esq.</option>
+                            <option value="bottom-right">Inferior Dir.</option>
+                        </select>
+                    </div>
+                    <div style="flex: 1;">
+                        <label style="margin-bottom: 6px; font-size: 11px; color: rgba(224, 242, 254, 0.9);">Tam. Fonte (px):</label>
+                        <input type="number" id="tamanho-prova" value="28" min="12" max="80" oninput="atualizarUrlFinal()" style="padding: 10px; font-size: 12px;">
+                    </div>
+                </div>
+
+                <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(2, 6, 23, 0.6); padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(56, 189, 248, 0.25);">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <input type="checkbox" id="usar-cor-prova" onchange="atualizarUrlFinal()" style="width: auto;">
+                        <label for="usar-cor-prova" style="margin: 0; font-size: 12px; cursor: pointer;">Cor de Fundo Exclusiva</label>
+                    </div>
+                    <input type="color" id="cor-prova-bg" value="#0284c7" onchange="document.getElementById('usar-cor-prova').checked = true; atualizarUrlFinal()">
+                </div>
             </div>
 
             <div class="drive-box" id="drive-box">
@@ -424,7 +449,6 @@
             </div>
         </div>
 
-        <!-- COLUNA DIREITA -->
         <div class="right-column" id="right-column">
             
             <div class="preview-container" id="preview-container">
