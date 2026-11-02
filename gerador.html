@@ -84,6 +84,7 @@
             document.getElementById('color-section').style.display = 'block';
             document.getElementById('prova-section').style.display = 'block'; 
             document.getElementById('event-title-text').innerText = "A buscar dados da planilha...";
+            document.getElementById('event-title-text').style.color = "#38bdf8";
             
             var btnInicial = document.getElementById('btn-gerar-inicial');
             if (btnInicial) btnInicial.style.display = 'none';
@@ -97,31 +98,30 @@
             fetch(API_URL + "?evento=" + encodeURIComponent(id) + "&nocache=" + new Date().getTime())
                 .then(res => res.json())
                 .then(dados => {
-                    // NOVA PROTEÇÃO: Se a planilha devolver um erro, mostra no painel e para.
                     if (dados.erro) {
-                        document.getElementById('event-title-text').innerText = "Erro: " + dados.erro;
-                        document.getElementById('event-title-text').style.color = "#ef4444"; // Cor vermelha
+                        document.getElementById('event-title-text').innerText = dados.erro;
+                        document.getElementById('event-title-text').style.color = "#ef4444";
                         document.getElementById('total-questoes-text').innerText = "0";
                         return;
                     }
 
-                    // Se encontrou o evento, carrega normalmente
                     if (dados.configuracoes) {
-                        document.getElementById('event-title-text').style.color = "#38bdf8"; // Volta à cor normal
+                        document.getElementById('event-title-text').style.color = "#38bdf8";
                         document.getElementById('event-title-text').innerText = dados.configuracoes.titulo || "Evento #" + id;
                         document.getElementById('total-questoes-text').innerText = dados.total_questoes || 0;
 
-                        if(dados.configuracoes.tipo_prova !== undefined) {
-                            document.getElementById('tipo-prova').value = dados.configuracoes.tipo_prova;
+                        if (dados.configuracoes.tipo_prova !== undefined) {
+                            document.getElementById('tipo-prova').value = dados.configuracoes.tipo_prova || "";
                             document.getElementById('posicao-prova').value = dados.configuracoes.posicao_prova || "top-left";
                             document.getElementById('tamanho-prova').value = dados.configuracoes.tamanho_prova || "40";
                             
-                            if(dados.configuracoes.cor_prova && dados.configuracoes.cor_prova !== "") {
+                            if (dados.configuracoes.cor_prova && dados.configuracoes.cor_prova !== "") {
                                 document.getElementById('usar-cor-prova').checked = true;
                                 document.getElementById('cor-prova-bg').value = dados.configuracoes.cor_prova;
                             } else {
                                 document.getElementById('usar-cor-prova').checked = false;
                             }
+                            enviarPrevisualizacao();
                         }
 
                         if (dados.configuracoes.link_videos) {
@@ -138,26 +138,50 @@
                         }
                     }
                 }).catch(err => {
-                    document.getElementById('event-title-text').innerText = "Erro de ligação com a planilha.";
+                    document.getElementById('event-title-text').innerText = "Erro de conexão com a planilha.";
                     document.getElementById('event-title-text').style.color = "#ef4444";
                 });
         }
 
-        // AGORA APENAS AS CORES E O EVENTO VÃO NA URL DO VMIX
+        // Envia as alterações em tempo real para o iframe sem recarregar a tela
+        function enviarPrevisualizacao() {
+            var tipoProva = document.getElementById('tipo-prova') ? document.getElementById('tipo-prova').value : '';
+            var posicaoProva = document.getElementById('posicao-prova') ? document.getElementById('posicao-prova').value : 'top-left';
+            var tamanhoProva = document.getElementById('tamanho-prova') ? document.getElementById('tamanho-prova').value : '40';
+            var usarCor = document.getElementById('usar-cor-prova') ? document.getElementById('usar-cor-prova').checked : false;
+            var corProvaBg = (usarCor && document.getElementById('cor-prova-bg')) ? document.getElementById('cor-prova-bg').value : '';
+
+            var iframe = document.getElementById('preview-iframe');
+            if (iframe && iframe.contentWindow) {
+                iframe.contentWindow.postMessage({
+                    action: 'previewProva',
+                    tipoProva: tipoProva,
+                    posicaoProva: posicaoProva,
+                    tamanhoProva: tamanhoProva,
+                    corProvaBg: corProvaBg
+                }, '*');
+            }
+        }
+
         function atualizarUrlFinal() {
             var id = document.getElementById('event-id') ? document.getElementById('event-id').value.trim() : '';
             var corFundo = document.getElementById('color-bg').value;
             var corTexto = document.getElementById('color-text').value;
             
             var baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/')) + '/index.html';
+            
+            // Link limpo/fixo que vai para o vMix
             var urlFinal = baseUrl + '?evento=' + encodeURIComponent(id) + '&corFundo=' + encodeURIComponent(corFundo) + '&corTexto=' + encodeURIComponent(corTexto);
-
             document.getElementById('generated-url').value = urlFinal;
+
+            // Link do preview com a marcação de preview ativada
+            var urlPreview = urlFinal + '&preview=1';
             var iframe = document.getElementById('preview-iframe');
-            if (iframe) iframe.src = urlFinal + '&v=' + new Date().getTime();
+            if (iframe) {
+                iframe.src = urlPreview + '&v=' + new Date().getTime();
+            }
         }
 
-        // NOVA FUNÇÃO: SALVA OS DADOS DIRETAMENTE NA PLANILHA (Células E7 a H7)
         function salvarDadosSelo() {
             var id = document.getElementById('event-id').value.trim();
             if (!id) { alert("Carregue um ID primeiro!"); return; }
@@ -183,9 +207,8 @@
                 .then(dados => {
                     btn.innerText = "Atualizar Selo Ao Vivo (vMix)";
                     btn.disabled = false;
-                    if(dados.sucesso) {
+                    if (dados.sucesso) {
                         exibirToast("Selo enviado para a Planilha! O vMix vai atualizar em breve.");
-                        atualizarUrlFinal(); // Força o iframe local a atualizar
                     } else { alert("Erro: " + dados.erro); }
                 }).catch(err => {
                     btn.innerText = "Atualizar Selo Ao Vivo (vMix)";
@@ -256,12 +279,12 @@
             <div class="title-box" id="prova-section" style="margin-top: 15px; margin-bottom: 0; padding: 15px;">
                 <label style="margin-bottom: 8px; color: rgba(224, 242, 254, 0.9); font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px; display: block;">Tipo de Prova (Selo Dinâmico)</label>
                 
-                <input type="text" id="tipo-prova" placeholder="Ex: Prova Tipo 1 - Azul" style="margin-bottom: 12px; padding: 10px;">
+                <input type="text" id="tipo-prova" placeholder="Ex: Prova Tipo 1 - Azul" oninput="enviarPrevisualizacao()" style="margin-bottom: 12px; padding: 10px;">
                 
                 <div style="display: flex; gap: 10px; margin-bottom: 12px;">
                     <div style="flex: 1;">
                         <label style="margin-bottom: 6px; font-size: 11px; color: rgba(224, 242, 254, 0.9);">Posição:</label>
-                        <select id="posicao-prova" style="padding: 10px; font-size: 12px;">
+                        <select id="posicao-prova" onchange="enviarPrevisualizacao()" style="padding: 10px; font-size: 12px;">
                             <option value="top-left">Superior Esq.</option>
                             <option value="top-center">Superior Centro</option>
                             <option value="top-right">Superior Dir.</option>
@@ -271,19 +294,18 @@
                     </div>
                     <div style="flex: 1;">
                         <label style="margin-bottom: 6px; font-size: 11px; color: rgba(224, 242, 254, 0.9);">Tam. Fonte (px):</label>
-                        <input type="number" id="tamanho-prova" value="40" min="12" max="80" style="padding: 10px; font-size: 12px;">
+                        <input type="number" id="tamanho-prova" value="40" min="12" max="80" oninput="enviarPrevisualizacao()" style="padding: 10px; font-size: 12px;">
                     </div>
                 </div>
 
                 <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(2, 6, 23, 0.6); padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(56, 189, 248, 0.25); margin-bottom: 15px;">
                     <div style="display: flex; align-items: center; gap: 8px;">
-                        <input type="checkbox" id="usar-cor-prova" style="width: auto;">
+                        <input type="checkbox" id="usar-cor-prova" onchange="enviarPrevisualizacao()" style="width: auto;">
                         <label for="usar-cor-prova" style="margin: 0; font-size: 12px; cursor: pointer;">Cor Exclusiva</label>
                     </div>
-                    <input type="color" id="cor-prova-bg" value="#0284c7" onchange="document.getElementById('usar-cor-prova').checked = true;">
+                    <input type="color" id="cor-prova-bg" value="#0284c7" oninput="document.getElementById('usar-cor-prova').checked = true; enviarPrevisualizacao()">
                 </div>
 
-                <!-- NOVO BOTÃO QUE ENVIA PARA A PLANILHA -->
                 <button type="button" class="btn-salvar" id="btn-salvar" onclick="salvarDadosSelo()">Atualizar Selo Ao Vivo (vMix)</button>
             </div>
 
