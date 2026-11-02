@@ -205,13 +205,13 @@
             fetch(requestUrl)
                 .then(res => res.json())
                 .then(dados => {
-                    btn.innerText = "Atualizar Selo Ao Vivo (vMix)";
+                    btn.innerText = "Atualizar Tipo de Prova (Vmix)";
                     btn.disabled = false;
                     if (dados.sucesso) {
                         exibirToast("Selo enviado para a Planilha! O vMix vai atualizar em breve.");
                     } else { alert("Erro: " + dados.erro); }
                 }).catch(err => {
-                    btn.innerText = "Atualizar Selo Ao Vivo (vMix)";
+                    btn.innerText = "Atualizar Tipo de Prova (Vmix)";
                     btn.disabled = false;
                     alert("Erro na conexão com a planilha.");
                 });
