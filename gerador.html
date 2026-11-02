@@ -41,7 +41,6 @@
             margin-bottom: 20px;
         }
 
-        /* COLUNA ESQUERDA */
         .card-control {
             background: rgba(255, 255, 255, 0.04);
             backdrop-filter: blur(20px);
@@ -55,7 +54,6 @@
             text-align: center;
         }
 
-        /* COLUNA DIREITA (Invisível ao abrir. Aparece após inserir o ID) */
         .right-column {
             display: none; 
             flex-direction: column;
@@ -64,7 +62,6 @@
             flex-shrink: 0;
         }
 
-        /* PAINEL INFERIOR DA DIREITA (BOTÕES E LINK) */
         .bottom-control {
             background: rgba(255, 255, 255, 0.04);
             backdrop-filter: blur(20px);
@@ -83,7 +80,7 @@
         .form-group { margin-bottom: 12px; text-align: left; }
         label { display: block; margin-bottom: 8px; font-size: 13px; font-weight: 600; color: rgba(240, 249, 255, 0.9); }
 
-        input[type="text"] {
+        input[type="text"], select {
             width: 100%;
             padding: 14px;
             border-radius: 12px;
@@ -94,7 +91,6 @@
             outline: none;
         }
 
-        /* CAIXAS DE INFORMAÇÃO */
         .title-box {
             display: none;
             margin-bottom: 20px;
@@ -105,12 +101,7 @@
             padding: 12px 15px;
         }
 
-        .title-value {
-            font-size: 15px;
-            font-weight: 700;
-            color: #38bdf8;
-            word-break: break-word;
-        }
+        .title-value { font-size: 15px; font-weight: 700; color: #38bdf8; word-break: break-word; }
 
         .color-picker-container {
             display: none;
@@ -121,11 +112,7 @@
             border: 1px solid rgba(56, 189, 248, 0.15);
         }
 
-        .custom-color-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
+        .custom-color-row { display: flex; align-items: center; justify-content: space-between; }
 
         input[type="color"] {
             border: none;
@@ -146,11 +133,7 @@
             padding: 15px;
         }
 
-        .drive-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
+        .drive-actions { display: flex; gap: 10px; margin-top: 10px; }
 
         .btn-drive-open, .btn-artes-open {
             color: white;
@@ -165,7 +148,6 @@
             flex: 1;
             text-align: center;
         }
-
         .btn-drive-open { background: #2563eb; }
         .btn-artes-open { background: #0284c7; }
 
@@ -180,17 +162,11 @@
             flex: 1;
             cursor: pointer;
         }
-
         .btn-drive-open:hover { background: #1d4ed8; }
         .btn-artes-open:hover { background: #0369a1; }
         .btn-drive-copy:hover { background: rgba(255, 255, 255, 0.2); }
 
-        /* AÇÕES E BOTÕES */
-        .actions { 
-            display: flex; 
-            flex-direction: column; 
-            gap: 12px; 
-        }
+        .actions { display: flex; flex-direction: column; gap: 12px; }
 
         button {
             width: 100%;
@@ -263,18 +239,17 @@
                 return;
             }
 
-            // Exibe as caixas de informações
             document.getElementById('title-box').style.display = 'block';
             document.getElementById('info-box').style.display = 'block';
             document.getElementById('color-section').style.display = 'block';
+            document.getElementById('prova-section').style.display = 'block'; // Nova seção do tipo de prova
+            
             document.getElementById('event-title-text').innerText = "A buscar dados da planilha...";
             document.getElementById('total-questoes-text').innerText = "...";
 
-            // Oculta o botão inicial e exibe a coluna direita
             var btnInicial = document.getElementById('btn-gerar-inicial');
-            if (btnInicial) {
-                btnInicial.style.display = 'none';
-            }
+            if (btnInicial) btnInicial.style.display = 'none';
+            
             document.getElementById('right-column').style.display = 'flex';
 
             atualizarUrlFinal();
@@ -326,11 +301,21 @@
 
             var corFundo = document.getElementById('color-bg').value;
             var corTexto = document.getElementById('color-text').value;
+            
+            // Novos Campos
+            var tipoProva = document.getElementById('tipo-prova') ? document.getElementById('tipo-prova').value.trim() : '';
+            var posicaoProva = document.getElementById('posicao-prova') ? document.getElementById('posicao-prova').value : 'top-left';
 
             var baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/')) + '/index.html';
+            
             var urlFinal = baseUrl + '?evento=' + encodeURIComponent(id) + 
                            '&corFundo=' + encodeURIComponent(corFundo) + 
                            '&corTexto=' + encodeURIComponent(corTexto);
+
+            // Adiciona parâmetros do tipo de prova se estiver preenchido
+            if (tipoProva !== '') {
+                urlFinal += '&tipoProva=' + encodeURIComponent(tipoProva) + '&posicao=' + encodeURIComponent(posicaoProva);
+            }
 
             document.getElementById('generated-url').value = urlFinal;
 
@@ -348,17 +333,11 @@
         }
 
         function copiarLinkDrive() {
-            if (linkDriveVideos) {
-                navigator.clipboard.writeText(linkDriveVideos);
-                exibirToast("Link da pasta de vídeos copiado!");
-            }
+            if (linkDriveVideos) { navigator.clipboard.writeText(linkDriveVideos); exibirToast("Link copiado!"); }
         }
 
         function copiarLinkArtes() {
-            if (linkDriveArtes) {
-                navigator.clipboard.writeText(linkDriveArtes);
-                exibirToast("Link da pasta de artes copiado!");
-            }
+            if (linkDriveArtes) { navigator.clipboard.writeText(linkDriveArtes); exibirToast("Link copiado!"); }
         }
 
         function exibirToast(mensagem) {
@@ -385,7 +364,6 @@
                 <input type="text" id="event-id" placeholder="INSERIR O ID DO INTRA AQUI!" autocomplete="off">
             </div>
 
-            <!-- BOTÃO INICIAL: Fica visível apenas até o utilizador clicar -->
             <button class="btn-generate" id="btn-gerar-inicial" onclick="gerarLink()" style="margin-top: 5px;">Carregar & Pré-visualizar</button>
 
             <!-- CAIXAS ESCONDIDAS (Aparecem após o clique) -->
@@ -399,7 +377,6 @@
                 <div class="title-value" id="total-questoes-text">...</div>
             </div>
 
-            <!-- SELETOR DE CORES OTIMIZADO (Lado a Lado) -->
             <div class="color-picker-container" id="color-section" style="padding: 12px 15px;">
                 <div style="display: flex; gap: 15px; align-items: center;">
                     <div class="custom-color-row" style="flex: 1; margin-bottom: 0;">
@@ -411,6 +388,21 @@
                         <input type="color" id="color-text" value="#ffffff" onchange="atualizarUrlFinal()">
                     </div>
                 </div>
+            </div>
+
+            <!-- NOVO: TIPO DE PROVA E POSICIONAMENTO -->
+            <div class="title-box" id="prova-section" style="margin-top: 15px; margin-bottom: 0; padding: 15px;">
+                <label style="margin-bottom: 8px; color: rgba(224, 242, 254, 0.9);">Tipo de Prova (Opcional):</label>
+                <input type="text" id="tipo-prova" placeholder="Ex: Prova Tipo 1 - Azul" oninput="atualizarUrlFinal()" style="margin-bottom: 12px; padding: 10px;">
+                
+                <label style="margin-bottom: 8px; color: rgba(224, 242, 254, 0.9);">Posição do Texto:</label>
+                <select id="posicao-prova" onchange="atualizarUrlFinal()" style="padding: 10px;">
+                    <option value="top-left">Superior Esquerdo</option>
+                    <option value="top-center">Superior Centro</option>
+                    <option value="top-right">Superior Direito</option>
+                    <option value="bottom-left">Inferior Esquerdo</option>
+                    <option value="bottom-right">Inferior Direito</option>
+                </select>
             </div>
 
             <div class="drive-box" id="drive-box">
@@ -432,7 +424,7 @@
             </div>
         </div>
 
-        <!-- COLUNA DIREITA (Invisível ao abrir. Aparece após inserir o ID) -->
+        <!-- COLUNA DIREITA -->
         <div class="right-column" id="right-column">
             
             <div class="preview-container" id="preview-container">
@@ -441,7 +433,6 @@
 
             <div class="bottom-control">
                 <div class="actions">
-                    <!-- BOTÃO SECUNDÁRIO: Aparece aqui após a transição -->
                     <button class="btn-generate" onclick="gerarLink()">Carregar & Pré-visualizar</button>
                     <button class="btn-copy" id="btn-copy" onclick="copiarLink()">Copiar Link do vMix</button>
                 </div>
@@ -464,9 +455,7 @@
 
     <script>
         document.getElementById('event-id').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                gerarLink();
-            }
+            if (e.key === 'Enter') gerarLink();
         });
     </script>
 </body>
