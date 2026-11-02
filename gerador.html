@@ -422,4 +422,52 @@
                 </div>
             </div>
 
-            <div
+            <div class="drive-box" id="artes-box">
+                <label>Pasta de Artes do Evento:</label>
+                <input type="text" class="output-url" id="artes-url-display" readonly style="margin-top: 5px;">
+                <div class="drive-actions">
+                    <a href="#" id="btn-open-artes" target="_blank" class="btn-artes-open">🎨 Abrir Pasta Artes</a>
+                    <button type="button" class="btn-drive-copy" onclick="copiarLinkArtes()">📋 Copiar Link</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- COLUNA DIREITA (Invisível ao abrir. Aparece após inserir o ID) -->
+        <div class="right-column" id="right-column">
+            
+            <div class="preview-container" id="preview-container">
+                <iframe id="preview-iframe" src=""></iframe>
+            </div>
+
+            <div class="bottom-control">
+                <div class="actions">
+                    <!-- BOTÃO SECUNDÁRIO: Aparece aqui após a transição -->
+                    <button class="btn-generate" onclick="gerarLink()">Carregar & Pré-visualizar</button>
+                    <button class="btn-copy" id="btn-copy" onclick="copiarLink()">Copiar Link do vMix</button>
+                </div>
+
+                <div class="output-box" id="output-box">
+                    <label style="display: block; margin-bottom: 6px; font-size: 13px; font-weight: 600; color: rgba(240, 249, 255, 0.9);">URL Gerada para a entrada Web Browser do vMix:</label>
+                    <input type="text" class="output-url" id="generated-url" readonly>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="footer-logo">
+        <img src="https://lh3.googleusercontent.com/d/14liJU9Uk5wsCe1spKmSYV-DytETRkvGS" alt="Estratégia Concursos">
+    </div>
+
+    <div class="toast" id="toast">Link copiado com sucesso!</div>
+
+    <script>
+        document.getElementById('event-id').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                gerarLink();
+            }
+        });
+    </script>
+</body>
+</html>
