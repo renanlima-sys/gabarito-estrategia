@@ -44,19 +44,8 @@
             transition: opacity 1.2s ease-in-out;
         }
 
-        .questao-box { 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-        }
-
-        .numero { 
-            width: 30px; 
-            text-align: right; 
-            margin-right: 23px; 
-            font-weight: 800; 
-            font-size: 25px;
-        } 
+        .questao-box { display: flex; align-items: center; justify-content: center; }
+        .numero { width: 30px; text-align: right; margin-right: 23px; font-weight: 800; font-size: 25px; } 
         
         .letra { 
             width: 58px; 
@@ -73,6 +62,19 @@
 
         .letra.vazia { color: transparent !important; }
         .aviso { color: #ffffff; background: rgba(0,0,0,0.8); padding: 15px; border-radius: 8px; font-size: 20px; grid-column: span 4; text-align: center; margin-top: 50px;}
+        
+        /* NOVO: Estilo base para a Label do Tipo de Prova */
+        #tipo-prova-container {
+            display: none; 
+            position: absolute; 
+            z-index: 10; 
+            font-size: 28px; 
+            font-weight: 800; 
+            padding: 12px 28px; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4); 
+            text-transform: uppercase;
+        }
     </style>
 </head>
 <body>
@@ -83,6 +85,9 @@
         <div class="aviso" id="status-msg">Carregando dados da planilha...</div>
     </div>
 
+    <!-- Container Dinâmico do Tipo de Prova -->
+    <div id="tipo-prova-container"></div>
+
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbzZCCQoeVY2cRJSIlcHZCMY0LPUaH-MFhcwWp4yLgWt5NNpNm6_aZpY11gHGN9z9hPfWA/exec";
         
@@ -90,6 +95,8 @@
         const eventoID = params.get("evento");
         const corFundoParam = params.get("corFundo");
         const corTextoParam = params.get("corTexto");
+        const tipoProvaParam = params.get("tipoProva");
+        const posicaoParam = params.get("posicao") || "top-left";
         
         const corManualInformada = (corFundoParam && corFundoParam !== "%234a2b82" && corFundoParam !== "#4a2b82");
 
@@ -131,10 +138,7 @@
 
                         var brilho = (r + g + b) / 3;
                         if (brilho > 30 && brilho < 225) {
-                            rSum += r;
-                            gSum += g;
-                            bSum += b;
-                            count++;
+                            rSum += r; gSum += g; bSum += b; count++;
                         }
                     }
 
@@ -142,7 +146,6 @@
                         var avgR = Math.floor(rSum / count);
                         var avgG = Math.floor(gSum / count);
                         var avgB = Math.floor(bSum / count);
-
                         var hex = "#" + ((1 << 24) + (avgR << 16) + (avgG << 8) + avgB).toString(16).slice(1);
                         callback(hex);
                     }
@@ -187,10 +190,52 @@
                             desenharTela();
                         }
                     })
-                    .catch(function(err) {
-                        console.error(err);
-                    });
+                    .catch(function(err) { console.error(err); });
             }, delayAleatorio);
+        }
+
+        function aplicarTipoProva() {
+            if (tipoProvaParam) {
+                const container = document.getElementById("tipo-prova-container");
+                container.innerText = decodeURIComponent(tipoProvaParam);
+                container.style.display = "block";
+                
+                // Aplica a cor inteligente extraída ou a manual escolhida
+                container.style.backgroundColor = corFundo;
+                container.style.color = corTexto;
+
+                // Limpa posições para evitar conflitos ao redimensionar
+                container.style.top = "auto";
+                container.style.bottom = "auto";
+                container.style.left = "auto";
+                container.style.right = "auto";
+                container.style.transform = "none";
+
+                // Posicionamento conforme escolha do operador
+                switch(posicaoParam) {
+                    case "top-left":
+                        container.style.top = "40px";
+                        container.style.left = "40px";
+                        break;
+                    case "top-center":
+                        container.style.top = "40px";
+                        container.style.left = "50%";
+                        container.style.transform = "translateX(-50%)";
+                        break;
+                    case "top-right":
+                        container.style.top = "40px";
+                        container.style.right = "280px"; // Afastado para não cobrir o QR Code
+                        break;
+                    case "bottom-left":
+                        container.style.bottom = "40px";
+                        container.style.left = "40px";
+                        break;
+                    case "bottom-right":
+                        container.style.bottom = "40px";
+                        container.style.right = "40px";
+                        break;
+                }
+            }
         }
 
         function desenharTela() {
@@ -216,9 +261,10 @@
                 
                 grid.appendChild(box);
             });
+
+            aplicarTipoProva(); // Chama o selo e aplica a cor na hora de desenhar a tela
         }
 
-        // VERIFICA SE A PÁGINA POSSUI PELO MENOS UMA RESPOSTA
         function paginaTemResposta(indexPagina) {
             let inicio = indexPagina * limitePorPagina;
             let fim = inicio + limitePorPagina;
@@ -227,33 +273,22 @@
             return itensPagina.some(q => q.resposta !== undefined && q.resposta !== null && String(q.resposta).trim() !== "");
         }
 
-        // DESCOBRE A PRÓXIMA PÁGINA QUE DEVE APARECER NA TELA
         function getProximaPagina(atual) {
             let totalPaginas = Math.ceil(gabaritoCompleto.length / limitePorPagina);
             if (totalPaginas <= 1) return atual;
 
             let proxima = atual + 1;
-            
             for (let i = 0; i < totalPaginas; i++) {
                 if (proxima >= totalPaginas) proxima = 0;
-                
-                if (paginaTemResposta(proxima)) {
-                    return proxima;
-                }
+                if (paginaTemResposta(proxima)) return proxima;
                 proxima++;
             }
-            
-            // Se NENHUMA página tiver resposta, fixa na primeira página (0)
             return 0;
         }
 
-        // EXECUTA A ROTAÇÃO INTELIGENTE A CADA 2 MINUTOS
         function rotacionarPaginas() {
             if (gabaritoCompleto.length <= limitePorPagina) return;
-
             let proximaPagina = getProximaPagina(paginaAtual);
-
-            // Se a próxima página for a mesma que já está na tela, não faz nada (evita o piscar)
             if (proximaPagina === paginaAtual) return;
 
             const grid = document.getElementById("grid-respostas");
@@ -268,7 +303,7 @@
 
         carregarDados();
         setInterval(carregarDados, 10000); 
-        setInterval(rotacionarPaginas, 120000); // 120.000 ms = 2 minutos
+        setInterval(rotacionarPaginas, 120000); 
     </script>
 </body>
 </html>
