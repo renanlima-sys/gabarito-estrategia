@@ -6,85 +6,40 @@
     <title>Gabarito Estratégia</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { 
-            width: 1920px; 
-            height: 1080px; 
-            background-color: transparent; 
-            overflow: hidden; 
-            font-family: 'Arial', sans-serif; 
-        }
+        body { width: 1920px; height: 1080px; background-color: transparent; overflow: hidden; font-family: 'Arial', sans-serif; }
 
-        #fundo-arte {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 1920px;
-            height: 1080px;
-            background-size: 1920px 1080px;
-            background-repeat: no-repeat;
-            z-index: 1; 
-        }
+        #fundo-arte { position: absolute; top: 0; left: 0; width: 1920px; height: 1080px; background-size: 1920px 1080px; background-repeat: no-repeat; z-index: 1; }
 
         .grid-container { 
-            position: absolute;
-            top: 208px; 
-            left: 20px; 
-            width: 630px; 
-            height: 690px; 
-            z-index: 2; 
-            display: grid; 
-            grid-template-rows: repeat(15, 1fr); 
-            grid-template-columns: repeat(4, 1fr); 
-            grid-auto-flow: column; 
-            row-gap: 3px; 
-            column-gap: 2px; 
-            padding: 8px; 
-            color: black; 
-            opacity: 1;
-            transition: opacity 1.2s ease-in-out;
+            position: absolute; top: 208px; left: 20px; width: 630px; height: 690px; z-index: 2; 
+            display: grid; grid-template-rows: repeat(15, 1fr); grid-template-columns: repeat(4, 1fr); 
+            grid-auto-flow: column; row-gap: 3px; column-gap: 2px; padding: 8px; color: black; 
+            opacity: 1; transition: opacity 1.2s ease-in-out;
         }
 
         .questao-box { display: flex; align-items: center; justify-content: center; }
         .numero { width: 30px; text-align: right; margin-right: 23px; font-weight: 800; font-size: 25px; } 
         
         .letra { 
-            width: 58px; 
-            height: 39px; 
-            font-size: 25px; 
-            font-weight: 800; 
-            color: #ffffff; 
-            border-radius: 8px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+            width: 58px; height: 39px; font-size: 25px; font-weight: 800; color: #ffffff; 
+            border-radius: 8px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.15);
         }
 
         .letra.vazia { color: transparent !important; }
         .aviso { color: #ffffff; background: rgba(0,0,0,0.8); padding: 15px; border-radius: 8px; font-size: 20px; grid-column: span 4; text-align: center; margin-top: 50px;}
         
-        /* Estilo base para a Label do Tipo de Prova */
         #tipo-prova-container {
-            display: none; 
-            position: absolute; 
-            z-index: 10; 
-            font-weight: 800; 
-            border-radius: 12px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4); 
-            text-transform: uppercase;
-            white-space: nowrap;
+            display: none; position: absolute; z-index: 10; font-weight: 800; border-radius: 12px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4); text-transform: uppercase; white-space: nowrap; transition: all 0.5s ease;
         }
     </style>
 </head>
 <body>
 
     <div id="fundo-arte"></div>
-
     <div class="grid-container" id="grid-respostas">
         <div class="aviso" id="status-msg">Carregando dados da planilha...</div>
     </div>
-
-    <!-- Container Dinâmico do Tipo de Prova -->
     <div id="tipo-prova-container"></div>
 
     <script>
@@ -95,17 +50,12 @@
         const corFundoParam = params.get("corFundo");
         const corTextoParam = params.get("corTexto");
         
-        const tipoProvaParam = params.get("tipoProva");
-        const posicaoParam = params.get("posicao") || "top-left";
-        const tamanhoParam = params.get("tamanho") || "40";
-        const corProvaBgParam = params.get("corProvaBg");
-        
         const corManualInformada = (corFundoParam && corFundoParam !== "%234a2b82" && corFundoParam !== "#4a2b82");
-
         let corFundo = corManualInformada ? decodeURIComponent(corFundoParam) : "#1d4ed8";
         let corTexto = corTextoParam ? decodeURIComponent(corTextoParam) : "#ffffff";
 
         let gabaritoCompleto = [];
+        let configProva = { tipo: "", posicao: "top-left", tamanho: "40", cor: "" };
         let paginaAtual = 0;
         const limitePorPagina = 60; 
 
@@ -117,43 +67,28 @@
 
         function extrairCorDaArte(urlImagem, callback) {
             if (corManualInformada) return;
-
             var img = new Image();
             img.crossOrigin = "Anonymous";
             img.src = urlImagem;
-
             img.onload = function() {
                 try {
                     var canvas = document.createElement("canvas");
                     var ctx = canvas.getContext("2d");
-                    canvas.width = img.width;
-                    canvas.height = img.height;
+                    canvas.width = img.width; canvas.height = img.height;
                     ctx.drawImage(img, 0, 0);
 
                     var imageData = ctx.getImageData(0, 0, Math.floor(img.width * 0.35), img.height).data;
-                    
                     var rSum = 0, gSum = 0, bSum = 0, count = 0;
                     for (var i = 0; i < imageData.length; i += 16) {
-                        var r = imageData[i];
-                        var g = imageData[i+1];
-                        var b = imageData[i+2];
-
+                        var r = imageData[i], g = imageData[i+1], b = imageData[i+2];
                         var brilho = (r + g + b) / 3;
-                        if (brilho > 30 && brilho < 225) {
-                            rSum += r; gSum += g; bSum += b; count++;
-                        }
+                        if (brilho > 30 && brilho < 225) { rSum += r; gSum += g; bSum += b; count++; }
                     }
-
                     if (count > 0) {
-                        var avgR = Math.floor(rSum / count);
-                        var avgG = Math.floor(gSum / count);
-                        var avgB = Math.floor(bSum / count);
-                        var hex = "#" + ((1 << 24) + (avgR << 16) + (avgG << 8) + avgB).toString(16).slice(1);
+                        var hex = "#" + ((1 << 24) + (Math.floor(rSum / count) << 16) + (Math.floor(gSum / count) << 8) + Math.floor(bSum / count)).toString(16).slice(1);
                         callback(hex);
                     }
-                } catch(e) {
-                    console.warn("Não foi possível extrair a cor da imagem por restrição CORS.", e);
-                }
+                } catch(e) {}
             };
         }
 
@@ -163,22 +98,25 @@
                 return;
             }
 
-            var delayAleatorio = Math.floor(Math.random() * 2000);
+            fetch(API_URL + "?evento=" + encodeURIComponent(eventoID) + "&nocache=" + new Date().getTime())
+                .then(res => res.json())
+                .then(dados => {
+                    if (dados.erro) {
+                        document.getElementById("status-msg").innerText = dados.erro;
+                        document.getElementById("fundo-arte").style.backgroundImage = "none";
+                        return;
+                    }
 
-            setTimeout(function() {
-                fetch(API_URL + "?evento=" + encodeURIComponent(eventoID) + "&nocache=" + new Date().getTime())
-                    .then(function(res) { return res.json(); })
-                    .then(function(dados) {
-                        if (dados.erro) {
-                            document.getElementById("status-msg").innerText = dados.erro;
-                            document.getElementById("fundo-arte").style.backgroundImage = "none";
-                            return;
-                        }
+                    if (dados.configuracoes) {
+                        // Salva as configurações de prova vindas da planilha (E7-H7)
+                        configProva.tipo = dados.configuracoes.tipo_prova || "";
+                        configProva.posicao = dados.configuracoes.posicao_prova || "top-left";
+                        configProva.tamanho = dados.configuracoes.tamanho_prova || "40";
+                        configProva.cor = dados.configuracoes.cor_prova || "";
 
-                        if (dados.configuracoes && dados.configuracoes.arte_fundo) {
+                        if (dados.configuracoes.arte_fundo) {
                             var linkImg = converterLinkDrive(dados.configuracoes.arte_fundo);
                             document.getElementById("fundo-arte").style.backgroundImage = "url('" + linkImg + "')";
-                            
                             extrairCorDaArte(linkImg, function(corDetectada) {
                                 corFundo = corDetectada;
                                 desenharTela();
@@ -186,70 +124,45 @@
                         } else {
                             document.getElementById("fundo-arte").style.backgroundImage = "none";
                         }
+                    }
 
-                        if (dados.gabarito && Array.isArray(dados.gabarito)) {
-                            gabaritoCompleto = dados.gabarito;
-                            desenharTela();
-                        }
-                    })
-                    .catch(function(err) { console.error(err); });
-            }, delayAleatorio);
+                    if (dados.gabarito && Array.isArray(dados.gabarito)) {
+                        gabaritoCompleto = dados.gabarito;
+                        desenharTela();
+                    }
+                }).catch(err => console.error(err));
         }
 
         function aplicarTipoProva() {
-            if (tipoProvaParam) {
-                const container = document.getElementById("tipo-prova-container");
-                container.innerText = decodeURIComponent(tipoProvaParam);
+            const container = document.getElementById("tipo-prova-container");
+            
+            if (configProva.tipo && configProva.tipo.trim() !== "") {
+                container.innerText = configProva.tipo;
                 container.style.display = "block";
                 
-                // Aplica a cor customizada do selo ou herda do fundo
-                if (corProvaBgParam) {
-                    container.style.backgroundColor = decodeURIComponent(corProvaBgParam);
-                } else {
-                    container.style.backgroundColor = corFundo;
-                }
-                
+                container.style.backgroundColor = (configProva.cor && configProva.cor !== "") ? configProva.cor : corFundo;
                 container.style.color = corTexto;
 
-                // Aplica o tamanho personalizado da fonte e ajusta o padding proporcionalmente
-                let tamanhoFonte = parseInt(tamanhoParam);
+                let tamanhoFonte = parseInt(configProva.tamanho);
                 container.style.fontSize = tamanhoFonte + "px";
                 
                 let paddingVertical = Math.max(8, tamanhoFonte * 0.4);
                 let paddingHorizontal = Math.max(16, tamanhoFonte * 1.0);
                 container.style.padding = paddingVertical + "px " + paddingHorizontal + "px";
 
-                // Reseta posições
-                container.style.top = "auto";
-                container.style.bottom = "auto";
-                container.style.left = "auto";
-                container.style.right = "auto";
+                container.style.top = "auto"; container.style.bottom = "auto";
+                container.style.left = "auto"; container.style.right = "auto";
                 container.style.transform = "none";
 
-                // Posicionamento 
-                switch(posicaoParam) {
-                    case "top-left":
-                        container.style.top = "60px";
-                        container.style.left = "15px";
-                        break;
-                    case "top-center":
-                        container.style.top = "60px";
-                        container.style.left = "45%";
-                        container.style.transform = "translateX(-50%)";
-                        break;
-                    case "top-right":
-                        container.style.top = "60px";
-                        container.style.right = "15px"; 
-                        break;
-                    case "bottom-left":
-                        container.style.bottom = "30px";
-                        container.style.left = "15px";
-                        break;
-                    case "bottom-right":
-                        container.style.bottom = "30px";
-                        container.style.right = "15px";
-                        break;
+                switch(configProva.posicao) {
+                    case "top-left": container.style.top = "60px"; container.style.left = "15px"; break;
+                    case "top-center": container.style.top = "60px"; container.style.left = "45%"; container.style.transform = "translateX(-50%)"; break;
+                    case "top-right": container.style.top = "60px"; container.style.right = "15px"; break;
+                    case "bottom-left": container.style.bottom = "30px"; container.style.left = "15px"; break;
+                    case "bottom-right": container.style.bottom = "30px"; container.style.right = "15px"; break;
                 }
+            } else {
+                container.style.display = "none";
             }
         }
 
@@ -264,16 +177,11 @@
             paginacao.forEach(function(q) {
                 let box = document.createElement("div");
                 box.className = "questao-box";
-                
                 let val = (q.resposta !== undefined && q.resposta !== null) ? String(q.resposta).trim() : "";
                 let classeVazia = val === "" ? "vazia" : "";
-
                 let estiloPersonalizado = 'style="background-color: ' + corFundo + ' !important; color: ' + corTexto + ' !important;"';
 
-                box.innerHTML = 
-                    '<div class="numero">' + q.numero + '</div>' +
-                    '<div class="letra ' + classeVazia + '" ' + estiloPersonalizado + '>' + val + '</div>';
-                
+                box.innerHTML = '<div class="numero">' + q.numero + '</div><div class="letra ' + classeVazia + '" ' + estiloPersonalizado + '>' + val + '</div>';
                 grid.appendChild(box);
             });
 
@@ -283,15 +191,12 @@
         function paginaTemResposta(indexPagina) {
             let inicio = indexPagina * limitePorPagina;
             let fim = inicio + limitePorPagina;
-            let itensPagina = gabaritoCompleto.slice(inicio, fim);
-            
-            return itensPagina.some(q => q.resposta !== undefined && q.resposta !== null && String(q.resposta).trim() !== "");
+            return gabaritoCompleto.slice(inicio, fim).some(q => q.resposta !== undefined && q.resposta !== null && String(q.resposta).trim() !== "");
         }
 
         function getProximaPagina(atual) {
             let totalPaginas = Math.ceil(gabaritoCompleto.length / limitePorPagina);
             if (totalPaginas <= 1) return atual;
-
             let proxima = atual + 1;
             for (let i = 0; i < totalPaginas; i++) {
                 if (proxima >= totalPaginas) proxima = 0;
@@ -308,7 +213,6 @@
 
             const grid = document.getElementById("grid-respostas");
             grid.style.opacity = "0";
-
             setTimeout(function() {
                 paginaAtual = proximaPagina;
                 desenharTela();
