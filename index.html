@@ -63,17 +63,16 @@
         .letra.vazia { color: transparent !important; }
         .aviso { color: #ffffff; background: rgba(0,0,0,0.8); padding: 15px; border-radius: 8px; font-size: 20px; grid-column: span 4; text-align: center; margin-top: 50px;}
         
-        /* NOVO: Estilo base para a Label do Tipo de Prova */
+        /* Estilo base para a Label do Tipo de Prova */
         #tipo-prova-container {
             display: none; 
             position: absolute; 
             z-index: 10; 
-            font-size: 28px; 
             font-weight: 800; 
-            padding: 12px 28px; 
             border-radius: 12px; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.4); 
             text-transform: uppercase;
+            white-space: nowrap;
         }
     </style>
 </head>
@@ -95,8 +94,11 @@
         const eventoID = params.get("evento");
         const corFundoParam = params.get("corFundo");
         const corTextoParam = params.get("corTexto");
+        
         const tipoProvaParam = params.get("tipoProva");
         const posicaoParam = params.get("posicao") || "top-left";
+        const tamanhoParam = params.get("tamanho") || "28";
+        const corProvaBgParam = params.get("corProvaBg");
         
         const corManualInformada = (corFundoParam && corFundoParam !== "%234a2b82" && corFundoParam !== "#4a2b82");
 
@@ -200,18 +202,31 @@
                 container.innerText = decodeURIComponent(tipoProvaParam);
                 container.style.display = "block";
                 
-                // Aplica a cor inteligente extraída ou a manual escolhida
-                container.style.backgroundColor = corFundo;
+                // Aplica a cor customizada do selo ou herda do fundo
+                if (corProvaBgParam) {
+                    container.style.backgroundColor = decodeURIComponent(corProvaBgParam);
+                } else {
+                    container.style.backgroundColor = corFundo;
+                }
+                
                 container.style.color = corTexto;
 
-                // Limpa posições para evitar conflitos ao redimensionar
+                // Aplica o tamanho personalizado da fonte e ajusta o padding proporcionalmente
+                let tamanhoFonte = parseInt(tamanhoParam);
+                container.style.fontSize = tamanhoFonte + "px";
+                
+                let paddingVertical = Math.max(8, tamanhoFonte * 0.4);
+                let paddingHorizontal = Math.max(16, tamanhoFonte * 1.0);
+                container.style.padding = paddingVertical + "px " + paddingHorizontal + "px";
+
+                // Reseta posições
                 container.style.top = "auto";
                 container.style.bottom = "auto";
                 container.style.left = "auto";
                 container.style.right = "auto";
                 container.style.transform = "none";
 
-                // Posicionamento conforme escolha do operador
+                // Posicionamento 
                 switch(posicaoParam) {
                     case "top-left":
                         container.style.top = "40px";
@@ -224,7 +239,7 @@
                         break;
                     case "top-right":
                         container.style.top = "40px";
-                        container.style.right = "280px"; // Afastado para não cobrir o QR Code
+                        container.style.right = "280px"; 
                         break;
                     case "bottom-left":
                         container.style.bottom = "40px";
@@ -262,7 +277,7 @@
                 grid.appendChild(box);
             });
 
-            aplicarTipoProva(); // Chama o selo e aplica a cor na hora de desenhar a tela
+            aplicarTipoProva(); 
         }
 
         function paginaTemResposta(indexPagina) {
